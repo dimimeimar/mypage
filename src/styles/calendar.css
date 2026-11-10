@@ -1,0 +1,285 @@
+/* Modern Calendar Styles */
+.rbc-calendar {
+  font-family: inherit;
+  border-radius: 12px;
+}
+
+/* Header Styling */
+.rbc-header {
+  padding: 14px 8px;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+  border-bottom: 2px solid #e2e8f0;
+  color: #475569;
+}
+
+.rbc-header + .rbc-header {
+  border-left: 1px solid #e2e8f0;
+}
+
+/* Today Highlight */
+.rbc-today {
+  background-color: var(--color-teal-pale);
+}
+
+.rbc-off-range-bg {
+  background-color: #f8fafc;
+}
+
+/* Event Styling */
+.rbc-event {
+  padding: 4px 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.rbc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  opacity: 1 !important;
+}
+
+.rbc-event:focus {
+  outline: 3px solid var(--color-teal);
+  outline-offset: 2px;
+}
+
+.rbc-event-label {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Time Slots */
+.rbc-time-slot {
+  min-height: 20px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.rbc-timeslot-group {
+  min-height: 40px;
+  border-left: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+.rbc-day-slot .rbc-time-slot:hover {
+  background-color: var(--color-teal-pale);
+}
+
+/* Current Time Indicator */
+.rbc-current-time-indicator {
+  background-color: var(--color-teal);
+  height: 2px;
+  box-shadow: 0 0 8px rgba(45, 122, 122, 0.5);
+}
+
+.rbc-current-time-indicator::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: -5px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-teal);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(45, 122, 122, 0.2);
+}
+
+/* Toolbar Buttons */
+.rbc-toolbar {
+  padding: 16px 0;
+  margin-bottom: 16px;
+}
+
+.rbc-toolbar button {
+  font-family: inherit;
+  color: #475569;
+  border: 1.5px solid #e2e8f0;
+  padding: 6px 12px;        /* μικρότερο padding */
+  border-radius: 8px;
+  background: white;
+  font-weight: 500;          /* λιγότερο bold */
+  font-size: 13px;           /* μικρότερο font */
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.rbc-toolbar {
+  padding: 12px 0;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.rbc-toolbar-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f5f5f;
+}
+
+.rbc-toolbar button:hover {
+  background-color: #f8fafc;
+  border-color: var(--color-teal);
+  color: var(--color-teal);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rbc-toolbar button.rbc-active {
+  background: linear-gradient(135deg, var(--color-teal) 0%, #256363 100%);
+  color: white;
+  border-color: #256363;
+  box-shadow: 0 4px 12px rgba(45, 122, 122, 0.4);
+}
+
+.rbc-toolbar button.rbc-active:hover {
+  background: linear-gradient(135deg, #256363 0%, #1a4f4f 100%);
+  transform: translateY(-1px);
+}
+
+/* Month View */
+.rbc-month-view {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.rbc-month-row {
+  border-top: 1px solid #e5e7eb;
+}
+
+.rbc-date-cell {
+  padding: 8px;
+  text-align: right;
+}
+
+.rbc-date-cell > a {
+  color: #64748b;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.rbc-date-cell.rbc-now > a {
+  color: var(--color-teal);
+  font-weight: 700;
+}
+
+/* Week View */
+.rbc-time-header {
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.rbc-time-content {
+  border-top: none;
+}
+
+/* Day View */
+.rbc-day-slot .rbc-event {
+  border-radius: 8px;
+}
+
+/* Selection */
+.rbc-slot-selection {
+  background-color: rgba(45, 122, 122, 0.2);
+  border: 2px dashed var(--color-teal);
+  border-radius: 8px;
+}
+
+/* Agenda View */
+.rbc-agenda-view {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.rbc-agenda-table {
+  border-spacing: 0;
+}
+
+.rbc-agenda-date-cell {
+  padding: 12px 16px;
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #475569;
+}
+
+.rbc-agenda-event-cell {
+  padding: 12px 16px;
+}
+
+/* Scrollbar Styling */
+.rbc-time-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.rbc-time-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.rbc-time-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.rbc-time-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .rbc-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .rbc-toolbar .rbc-btn-group {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .rbc-toolbar-label {
+    text-align: center;
+    order: -1;
+  }
+
+  /* ήδη υπάρχοντα: */
+  .rbc-toolbar button {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .rbc-header {
+    padding: 10px 4px;
+    font-size: 11px;
+  }
+
+  .rbc-event {
+    font-size: 11px;
+    padding: 2px 4px;
+  }
+}
+
+/* Animation for events */
+@keyframes eventAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.rbc-event {
+  animation: eventAppear 0.3s ease-out;
+}

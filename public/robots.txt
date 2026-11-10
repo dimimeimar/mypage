@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://meimaridistutor.com/sitemap.xml
+
+# Bilingual tutoring services
+# Computer Science, Physics, Mathematics
+# Thessaloniki & Online | Θεσσαλονίκη & Διαδικτυακά
+# International and Greek students welcome

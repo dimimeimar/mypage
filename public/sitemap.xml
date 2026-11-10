@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Αρχική σελίδα -->
+  <url>
+    <loc>https://meimaridistutor.com/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meimaridistutor.com/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://meimaridistutor.com/?lang=el" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://meimaridistutor.com/" />
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <lastmod>2026-07-12</lastmod>
+  </url>
+
+  <!-- Υπηρεσίες - landing -->
+  <url>
+    <loc>https://meimaridistutor.com/services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meimaridistutor.com/services" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://meimaridistutor.com/services?lang=el" />
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2026-07-12</lastmod>
+  </url>
+
+  <!-- Μαθήματα -->
+  <url>
+    <loc>https://meimaridistutor.com/services/subjects</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meimaridistutor.com/services/subjects" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://meimaridistutor.com/services/subjects?lang=el" />
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2026-07-12</lastmod>
+  </url>
+
+  <!-- Σχολές - πλήρες περιεχόμενο (Μέρος 2) -->
+  <url>
+    <loc>https://meimaridistutor.com/services/schools</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meimaridistutor.com/services/schools" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://meimaridistutor.com/services/schools?lang=el" />
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <lastmod>2026-07-12</lastmod>
+  </url>
+
+  <!-- Συμβουλευτική - πλήρες περιεχόμενο (Μέρος 3) -->
+  <url>
+    <loc>https://meimaridistutor.com/services/consulting</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meimaridistutor.com/services/consulting" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://meimaridistutor.com/services/consulting?lang=el" />
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <lastmod>2026-07-12</lastmod>
+  </url>
+
+  <!-- Επισκευές - πλήρες περιεχόμενο (Μέρος 4) -->
+  <url>
+    <loc>https://meimaridistutor.com/services/repairs</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meimaridistutor.com/services/repairs" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://meimaridistutor.com/services/repairs?lang=el" />
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <lastmod>2026-07-12</lastmod>
+  </url>
+
+  <!-- Σχετικά -->
+  <url>
+    <loc>https://meimaridistutor.com/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meimaridistutor.com/about" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://meimaridistutor.com/about?lang=el" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2026-07-12</lastmod>
+  </url>
+
+  <!-- Επικοινωνία -->
+  <url>
+    <loc>https://meimaridistutor.com/contact</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meimaridistutor.com/contact" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://meimaridistutor.com/contact?lang=el" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2026-07-12</lastmod>
+  </url>
+
+  <!-- Ημερολόγιο / Κράτηση -->
+  <url>
+    <loc>https://meimaridistutor.com/calendar</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meimaridistutor.com/calendar" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://meimaridistutor.com/calendar?lang=el" />
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2026-07-12</lastmod>
+  </url>
+
+</urlset>
