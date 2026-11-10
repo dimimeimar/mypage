@@ -1,213 +1,211 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ArrowRight, Code2, Sigma, Atom, Gamepad2 } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useTheme } from '../../contexts/ThemeContext';
 import { STATS, ROUTES } from '../../constants/routes';
-import SearchBar from '../common/searchBar';
 import { homeData } from '../../data/home_data';
+import { stripTonos } from '../../utils/text';
+import SearchBar from '../common/searchBar';
+import SEO from '../common/SEO';
+import StatsBand from '../common/StatsBand';
+import CtaBand from '../common/CtaBand';
+import Decode from '../fx/Decode';
+import TiltCard from '../fx/TiltCard';
+import CodeDemo from '../fx/CodeDemo';
 
-/* ── Animated counter hook ── */
-function useCounter(target, duration = 1800, trigger = false) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    if (!trigger) return;
-    const numeric = parseInt(target.replace(/\D/g, ''), 10);
-    const suffix = target.replace(/[0-9]/g, '');
-    let start = null;
-    const step = (ts) => {
-      if (!start) start = ts;
-      const progress = Math.min((ts - start) / duration, 1);
-      setValue(Math.floor(progress * numeric) + suffix);
-      if (progress < 1) requestAnimationFrame(step);
-      else setValue(target);
-    };
-    requestAnimationFrame(step);
-  }, [trigger, target, duration]);
-  return value;
-}
+// Το three.js φορτώνεται σε ξεχωριστό chunk, αφού εμφανιστεί το κείμενο του hero
+const HeroScene = lazy(() => import('../fx/HeroScene'));
 
-/* ── Stats counter component ── */
-const StatCounter = ({ value, label, trigger }) => {
-  const count = useCounter(value, 1600, trigger);
-  return (
-    <div style={{ textAlign: 'center', padding: '1rem' }}>
-      <div className="stat-number">{count || '0'}</div>
-      <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginTop: '0.5rem' }}>
-        {label}
-      </p>
-    </div>
-  );
-};
+// Ένα εικονίδιο ανά πρόγραμμα - ίδια σειρά με homeData.programs και με τα 3D σχήματα
+const PROGRAM_ICONS = [Code2, Sigma, Atom, Gamepad2];
+const SHAPE_MS = 6000;
 
 const HomePage = () => {
   const navigate = useNavigate();
   const { language } = useTranslation();
-  const statsRef = useRef(null);
-  const [statsVisible, setStatsVisible] = useState(false);
-  const [flippedCard, setFlippedCard] = useState(null);
-
+  const { theme } = useTheme();
   const d = homeData[language] || homeData.el;
 
-  const handleSearchResult = () => {
-    navigate('/contact');
+  const [shape, setShape] = useState(0);
+  const [auto, setAuto] = useState(true); // σταματάει μόλις ο επισκέπτης διαλέξει μόνος του
+  const [sceneFailed, setSceneFailed] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, []);
+
+  // Αυτόματη εναλλαγή των 3D σχημάτων
+  useEffect(() => {
+    if (!auto) return undefined;
+    const id = setTimeout(() => setShape((s) => (s + 1) % d.programs.length), SHAPE_MS);
+    return () => clearTimeout(id);
+  }, [shape, auto, d.programs.length]);
+
+  const pickShape = (i) => {
+    setAuto(false);
+    setShape(i);
   };
 
-  // Intersection observer for stats
-  useEffect(() => {
-    const el = statsRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setStatsVisible(true); },
-      { threshold: 0.3 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-
   return (
-    <div style={{ backgroundColor: 'var(--color-bg)' }}>
+    <div>
+      <SEO page="home" />
 
       {/* ── HERO ── */}
-      <section
-        style={{
-          position: 'relative',
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          overflow: 'hidden',
-          backgroundColor: '#0f0f0f',
-        }}
-      >
-        <div className="container" style={{ position: 'relative', zIndex: 2, paddingTop: '7rem', paddingBottom: '4rem' }}>
-          <div
-            style={{ display: 'flex', flexWrap: 'wrap', gap: '3rem', alignItems: 'center', justifyContent: 'space-between' }}
-          >
-            {/* Text column (eyebrow/title/subtitle) */}
-            <div style={{ flex: '1 1 380px' }}>
-              <p className="eyebrow animate-fade-in" style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '1.5rem' }}>
-                {d.hero.eyebrow}
-              </p>
-
-              <h1
-                className="display-title animate-slide-up"
-                style={{
-                  fontSize: 'clamp(2.4rem, 4.5vw, 3.8rem)',
-                  color: '#ffffff',
-                  marginBottom: '1.5rem',
-                  animationDelay: '0.1s',
-                }}
-              >
-                {d.hero.title}
-              </h1>
-
-              <p
-                className="animate-slide-up"
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '1.05rem',
-                  color: 'rgba(255,255,255,0.75)',
-                  lineHeight: 1.7,
-                  marginBottom: '2.5rem',
-                  animationDelay: '0.2s',
-                  maxWidth: '480px',
-                }}
-              >
-                {d.hero.subtitle}
-              </p>
-            </div>
-
-            {/* Photo column */}
-            <div
-              className="animate-fade-in"
-              style={{
-                flex: '0 0 auto',
-                width: 'clamp(180px, 26vw, 320px)',
-                height: 'clamp(180px, 26vw, 320px)',
-                borderRadius: '50%',
-                overflow: 'hidden',
-                margin: '0 auto',
-                boxShadow: '0 0 0 12px rgba(45,122,122,0.12), 0 0 60px rgba(45,122,122,0.25), 0 25px 50px rgba(0,0,0,0.4)',
-                animationDelay: '0.15s',
-              }}
-            >
-              <img
-                src="/images/dimitris-profile.png"
-                alt="Δημήτρης Μεϊμαρίδης"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              />
-            </div>
-
-            {/* Search + CTA column - πάντα σε δική του γραμμή */}
-            <div style={{ flex: '1 1 100%' }}>
-              {/* Search bar */}
-              <div className="animate-fade-in" style={{ animationDelay: '0.25s', marginBottom: '2rem', maxWidth: '460px' }}>
-                <SearchBar
-                  placeholder={d.search.placeholder}
-                  onResultSelect={handleSearchResult}
-                />
+      <section className="hero fx-clear" data-rv="off">
+        <div className="container">
+          <div className="hero__grid">
+            <div>
+              <div className="hero__who">
+                <img src="/images/dimitris-profile.png" alt={d.hero.name} width="42" height="42" />
+                <span>
+                  <strong>{d.hero.name}</strong>
+                  <small>{d.hero.eyebrow}</small>
+                </span>
               </div>
 
-              <div className="animate-fade-in" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', animationDelay: '0.3s' }}>
-                <button className="btn-white" onClick={() => navigate('/contact')}>
-                  {d.hero.ctaPrimary}
+              <Decode
+                as="h1"
+                className={`hero__title${d.hero.title.length > 40 ? ' hero__title--long' : ''}`}
+                text={d.hero.title}
+                delay={150}
+              />
+
+              <p className="hero__sub">{d.hero.subtitle}</p>
+
+              <div className="hero__search">
+                <SearchBar placeholder={d.search.placeholder} onResultSelect={() => navigate(ROUTES.CONTACT)} />
+              </div>
+
+              <div className="hero__actions">
+                <button className="btn-primary" onClick={() => navigate(ROUTES.CONTACT)}>
+                  {d.hero.ctaPrimary} <ArrowRight size={16} />
                 </button>
-                <button
-                  onClick={() => navigate(ROUTES.SERVICES_SUBJECTS)}
-                  style={{
-                    display: 'inline-block',
-                    padding: '0.75rem 2rem',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    borderRadius: '9999px',
-                    border: '2px solid rgba(255,255,255,0.4)',
-                    color: 'rgba(255,255,255,0.85)',
-                    background: 'transparent',
-                    cursor: 'pointer',
-                    transition: 'all 0.25s ease',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#fff'; e.currentTarget.style.color = '#fff'; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; e.currentTarget.style.color = 'rgba(255,255,255,0.85)'; }}
-                >
+                <button className="btn-ghost" onClick={() => navigate(ROUTES.SERVICES_SUBJECTS)}>
                   {d.hero.ctaSecondary}
                 </button>
               </div>
             </div>
+
+            <div className="hero__stage">
+              {sceneFailed ? (
+                <img
+                  src="/images/dimitris-profile.png"
+                  alt={d.hero.name}
+                  style={{ width: '70%', margin: '15%', borderRadius: '50%', boxShadow: 'var(--glow)' }}
+                />
+              ) : (
+                <Suspense fallback={null}>
+                  <HeroScene shape={shape} theme={theme} onError={() => setSceneFailed(true)} />
+                </Suspense>
+              )}
+              {!sceneFailed && (
+                <p className="hero__caption" aria-hidden="true">
+                  <b>{stripTonos(d.programs[shape].title)}</b> / {d.hero.shapes[shape]}
+                </p>
+              )}
+            </div>
           </div>
 
+          {/* Τα 4 αντικείμενα: κάθε κουμπί μεταμορφώνει το 3D σχήμα */}
+          <div className="hero__tabs" role="tablist" aria-label={d.programsSection.eyebrow}>
+            {d.programs.map((p, i) => (
+              <button
+                key={p.number}
+                role="tab"
+                aria-selected={shape === i}
+                className={`hero__tab${shape === i ? ' is-active' : ''}${auto ? ' is-auto' : ''}`}
+                style={{ '--tab-ms': `${SHAPE_MS}ms` }}
+                onClick={() => pickShape(i)}
+                onMouseEnter={() => pickShape(i)}
+              >
+                <span>{p.tag}</span>
+                <strong>{p.title}</strong>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="hero__scroll" aria-hidden="true" />
+      </section>
+
+      {/* ── STATS ── */}
+      <StatsBand
+        items={[
+          { value: STATS.YEARS, label: d.stats.labels[0] },
+          { value: STATS.STUDENTS, label: d.stats.labels[1] },
+          { value: STATS.SUBJECTS, label: d.stats.labels[2] },
+        ]}
+      />
+
+      {/* ── PROGRAMS (3D tilt cards) ── */}
+      <section className="band">
+        <div className="container">
+          <div className="band__head">
+            <div>
+              <p className="eyebrow">{d.programsSection.eyebrow}</p>
+              <Decode as="h2" className="band__title" text={d.programsSection.title} />
+            </div>
+            <button className="btn-outline" onClick={() => navigate(ROUTES.SERVICES_SUBJECTS)}>
+              {d.programsSection.allButton} <ArrowRight size={16} />
+            </button>
+          </div>
+
+          <div className="tilt-grid" data-rv-group>
+            {d.programs.map((p, i) => {
+              const Icon = PROGRAM_ICONS[i] || Code2;
+              return (
+                <div key={p.number} style={{ perspective: '1200px' }}>
+                  <TiltCard
+                    role="link"
+                    tabIndex={0}
+                    onClick={() => navigate(ROUTES.CONTACT)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') navigate(ROUTES.CONTACT); }}
+                  >
+                    <div className="tilt__icon"><Icon size={22} /></div>
+                    <p className="tilt__tag">{p.tag}</p>
+                    <h3 className="tilt__title">{p.title}</h3>
+                    <p className="tilt__desc">{p.desc}</p>
+                    <p className="tilt__more">{p.details}</p>
+                    <span className="tilt__cta">
+                      {d.programsSection.inquireLabel} <ArrowRight size={15} />
+                    </span>
+                  </TiltCard>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
+
+      {/* ── CODE DEMO ── */}
+      <section className="band">
+        <div className="container">
+          <div className="code-split" data-rv-group>
+            <div>
+              <p className="eyebrow">{d.codeDemo.eyebrow}</p>
+              <Decode as="h2" className="band__title" text={d.codeDemo.title} />
+              <p className="band__lead">{d.codeDemo.body}</p>
+              <button className="btn-outline" style={{ marginTop: '2rem' }} onClick={() => navigate(ROUTES.SERVICES_SUBJECTS)}>
+                {d.codeDemo.cta} <ArrowRight size={16} />
+              </button>
+            </div>
+            <CodeDemo outputLabel={d.codeDemo.outputLabel} />
+          </div>
+        </div>
+      </section>
+
       {/* ── INTRO VIDEO ── */}
-      <section style={{ backgroundColor: 'var(--color-surface)', padding: '6rem 0', borderBottom: '1px solid var(--color-border)' }}>
-        <div className="container" style={{ textAlign: 'center' }}>
-          <p className="eyebrow" style={{ marginBottom: '0.75rem' }}>{d.introVideo.eyebrow}</p>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', margin: '0 0 0.75rem' }}>
-            {d.introVideo.title}
-          </h2>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'var(--color-text-muted)', maxWidth: '520px', margin: '0 auto 2.5rem', lineHeight: 1.7 }}>
-            {d.introVideo.subtitle}
-          </p>
-          <div
-            style={{
-              maxWidth: '780px',
-              margin: '0 auto',
-              position: 'relative',
-              aspectRatio: '16 / 9',
-              borderRadius: '16px',
-              overflow: 'hidden',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.15)',
-              border: '1px solid var(--color-border)',
-            }}
-          >
+      <section className="band">
+        <div className="container">
+          <div className="band__head band__head--center">
+            <p className="eyebrow">{d.introVideo.eyebrow}</p>
+            <Decode as="h2" className="band__title" text={d.introVideo.title} />
+            <p className="band__lead" style={{ marginTop: 0 }}>{d.introVideo.subtitle}</p>
+          </div>
+          <div className="video-frame">
             <iframe
               src={`https://www.youtube-nocookie.com/embed/${d.introVideo.youtubeId}`}
               title={d.introVideo.title}
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               loading="lazy"
@@ -216,146 +214,44 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* ── QUOTE STRIP ── */}
-      <section style={{ backgroundColor: 'var(--color-surface)', padding: '5rem 0', borderBottom: '1px solid var(--color-border)' }}>
-        <div className="container" style={{ textAlign: 'center', maxWidth: '780px' }}>
-          <p className="eyebrow" style={{ marginBottom: '1.5rem' }}>
-            {d.philosophy.eyebrow}
-          </p>
-          <blockquote
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-              fontStyle: 'italic',
-              fontWeight: 300,
-              color: 'var(--color-text)',
-              lineHeight: 1.5,
-              margin: 0,
-            }}
-          >
-            {d.philosophy.quote}
-          </blockquote>
-          <div className="accent-line-center" style={{ marginTop: '2rem' }} />
-        </div>
-      </section>
-
-      {/* ── PROGRAMS ── */}
-      <section style={{ backgroundColor: 'var(--color-bg)', padding: '6rem 0' }}>
+      {/* ── PHILOSOPHY QUOTE ── */}
+      <section className="band">
         <div className="container">
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '3.5rem' }}>
-            <div>
-              <p className="eyebrow" style={{ marginBottom: '0.75rem' }}>
-                {d.programsSection.eyebrow}
-              </p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(2rem, 4vw, 3rem)', margin: 0 }}>
-                {d.programsSection.title}
-              </h2>
-            </div>
-            <button className="btn-teal" onClick={() => navigate(ROUTES.SERVICES_SUBJECTS)}>
-              {d.programsSection.allButton}
-            </button>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>
-            {d.programs.map((p) => {
-              const isFlipped = flippedCard === p.number;
-              return (
-                <div
-                  key={p.number}
-                  className={`flip-card${isFlipped ? ' is-flipped' : ''}`}
-                  onClick={() => {
-                    // Πρώτο tap (mobile/χωρίς hover): γύρισε την κάρτα. Δεύτερο tap: πήγαινε στο contact.
-                    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-                      navigate('/contact');
-                    } else if (isFlipped) {
-                      navigate('/contact');
-                    } else {
-                      setFlippedCard(p.number);
-                    }
-                  }}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <div className="flip-card-inner">
-                    {/* Front */}
-                    <div className="flip-card-face">
-                      <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 600, letterSpacing: '0.12em', color: 'var(--color-teal)', marginBottom: '0.5rem' }}>
-                        {p.number}. {p.tag}
-                      </p>
-                      <h3 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: '1.6rem', marginBottom: '1rem', marginTop: 0 }}>
-                        {p.title}
-                      </h3>
-                      <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--color-text-muted)', lineHeight: 1.7, margin: 0 }}>
-                        {p.desc}
-                      </p>
-                      <div style={{ marginTop: 'auto', paddingTop: '2rem', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--color-teal)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        {d.programsSection.inquireLabel} →
-                      </div>
-                    </div>
-                    {/* Back */}
-                    <div className="flip-card-face flip-card-back">
-                      <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 600, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.75)', marginBottom: '0.75rem' }}>
-                        {p.number}. {p.tag}
-                      </p>
-                      <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', lineHeight: 1.7, margin: 0, flex: 1 }}>
-                        {p.details}
-                      </p>
-                      <div style={{ marginTop: '1.5rem', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        {d.programsSection.inquireLabel} →
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="quote">
+            <p className="eyebrow">{d.philosophy.eyebrow}</p>
+            <Decode as="blockquote" text={d.philosophy.quote} />
           </div>
         </div>
       </section>
 
-      {/* ── FEATURES (Γιατί να με επιλέξετε) ── */}
-      <section style={{ backgroundColor: 'var(--color-surface)', padding: '6rem 0', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
+      {/* ── WHY ME + ACHIEVEMENTS ── */}
+      <section className="band">
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1px', backgroundColor: 'var(--color-border)' }}>
-            {d.features.map((f, i) => {
+          <div className="band__head band__head--center">
+            <p className="eyebrow">{d.achievementsSection.eyebrow}</p>
+            <Decode as="h2" className="band__title" text={d.achievementsSection.title} />
+          </div>
+
+          <div className="feat-grid" data-rv-group style={{ marginBottom: '1.25rem' }}>
+            {d.features.map((f) => {
               const Icon = f.icon;
               return (
-                <div key={i} style={{ backgroundColor: 'var(--color-surface)', padding: '2.5rem 2rem', textAlign: 'center' }}>
-                  <div style={{ width: '3rem', height: '3rem', borderRadius: '50%', backgroundColor: 'var(--color-teal-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
-                    <Icon size={20} style={{ color: 'var(--color-teal)' }} />
-                  </div>
-                  <h3 style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '0.95rem', marginBottom: '0.5rem', marginTop: 0 }}>
-                    {f.title}
-                  </h3>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: 1.6, margin: 0 }}>
-                    {f.description}
-                  </p>
+                <div key={f.title} className="feat feat--big">
+                  <Icon size={26} className="feat__icon" />
+                  <h3>{f.title}</h3>
+                  <p>{f.description}</p>
                 </div>
               );
             })}
           </div>
-        </div>
-      </section>
-
-      {/* ── ACHIEVEMENTS ── */}
-      <section style={{ backgroundColor: 'var(--color-bg)', padding: '6rem 0' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <p className="eyebrow" style={{ marginBottom: '0.75rem' }}>{d.achievementsSection.eyebrow}</p>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', maxWidth: '600px', margin: '0 auto' }}>
-              {d.achievementsSection.title}
-            </h2>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1px', backgroundColor: 'var(--color-border)' }}>
-            {d.achievements.map((a, i) => {
+          <div className="feat-grid" data-rv-group style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+            {d.achievements.map((a) => {
               const Icon = a.icon;
               return (
-                <div key={i} style={{ backgroundColor: 'var(--color-bg)', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  <Icon size={18} style={{ color: 'var(--color-teal)' }} />
-                  <h4 style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '0.85rem', margin: 0 }}>
-                    {a.title}
-                  </h4>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', color: 'var(--color-text-muted)', lineHeight: 1.6, margin: 0 }}>
-                    {a.description}
-                  </p>
+                <div key={a.title} className="feat">
+                  <Icon size={20} className="feat__icon" />
+                  <h3 style={{ fontSize: '1rem' }}>{a.title}</h3>
+                  <p>{a.description}</p>
                 </div>
               );
             })}
@@ -364,136 +260,64 @@ const HomePage = () => {
       </section>
 
       {/* ── ABOUT / TEACHING PHOTO ── */}
-      <section style={{ backgroundColor: 'var(--color-surface)', padding: '6rem 0', borderTop: '1px solid var(--color-border)' }}>
+      <section className="band">
         <div className="container">
           <div className="split-grid split-grid--even">
-            {/* Photo */}
-            <div style={{ position: 'relative' }}>
-              <img
-                src="/images/Teaching_unity.png"
-                alt="Live Unity tutoring session"
-                style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', display: 'block' }}
-              />
-              {/* Quote overlay card */}
-              <div style={{
-                position: 'absolute', bottom: '-1.5rem', right: '-1.5rem',
-                backgroundColor: 'var(--color-teal)',
-                color: '#ffffff',
-                padding: '1.5rem 1.75rem',
-                maxWidth: '260px',
-              }}>
-                <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: '0.95rem', lineHeight: 1.5, margin: '0 0 0.75rem' }}>
+            <div className="about-photo">
+              <img src="/images/Teaching_unity.png" alt="Live Unity tutoring session" loading="lazy" />
+              <div className="about-photo__card">
+                <p style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: '1rem', lineHeight: 1.45, marginBottom: '0.75rem' }}>
                   {d.aboutSection.quoteOverlay.quote}
                 </p>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', margin: 0, opacity: 0.85 }}>
+                <p style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                   {d.aboutSection.quoteOverlay.name}
                 </p>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.65rem', letterSpacing: '0.06em', margin: 0, opacity: 0.7 }}>
-                  {d.aboutSection.quoteOverlay.role}
-                </p>
+                <p style={{ fontSize: '0.68rem', opacity: 0.8 }}>{d.aboutSection.quoteOverlay.role}</p>
               </div>
             </div>
 
-            {/* Text */}
-            <div style={{ paddingRight: '1rem' }}>
-              <p className="eyebrow" style={{ marginBottom: '0.75rem' }}>{d.aboutSection.eyebrow}</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', lineHeight: 1.2, marginBottom: '1rem', marginTop: 0 }}>
-                {d.aboutSection.title}
-              </h2>
+            <div>
+              <p className="eyebrow">{d.aboutSection.eyebrow}</p>
+              <Decode as="h2" className="band__title" text={d.aboutSection.title} />
               <div className="accent-line" />
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'var(--color-text-muted)', lineHeight: 1.8, marginBottom: '1rem', marginTop: '1.25rem' }}>
-                {d.aboutSection.body}
-              </p>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'var(--color-text-muted)', lineHeight: 1.8, marginBottom: '2rem' }}>
-                {d.aboutSection.availability}
-              </p>
-              <button className="btn-outline" onClick={() => navigate('/about')}>
-                {d.aboutSection.cta}
+              <p className="band__lead">{d.aboutSection.body}</p>
+              <p className="band__lead">{d.aboutSection.availability}</p>
+              <button className="btn-outline" style={{ marginTop: '2rem' }} onClick={() => navigate(ROUTES.ABOUT)}>
+                {d.aboutSection.cta} <ArrowRight size={16} />
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── STATS ── */}
-      <section ref={statsRef} style={{ backgroundColor: '#0f0f0f', padding: '5rem 0' }}>
-        <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', backgroundColor: 'rgba(255,255,255,0.08)' }}>
-            {[
-              { value: STATS.YEARS, label: d.stats.labels[0] },
-              { value: STATS.STUDENTS, label: d.stats.labels[1] },
-              { value: STATS.SUBJECTS, label: d.stats.labels[2] },
-            ].map((s, i) => (
-              <div key={i} style={{ backgroundColor: '#0f0f0f', padding: '3rem 2rem', textAlign: 'center' }}>
-                <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 300, fontSize: 'clamp(3rem, 6vw, 4.5rem)', color: '#ffffff', lineHeight: 1 }}>
-                  {statsVisible ? s.value : '-'}
-                </div>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginTop: '0.75rem', marginBottom: 0 }}>
-                  {s.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── TESTIMONIALS ── */}
-      <section style={{ backgroundColor: 'var(--color-bg)', padding: '6rem 0' }}>
+      <section className="band">
         <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <p className="eyebrow" style={{ marginBottom: '0.75rem' }}>{d.testimonialsSection.eyebrow}</p>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(2rem, 4vw, 3rem)', margin: 0 }}>
-              {d.testimonialsSection.title}
-            </h2>
+          <div className="band__head band__head--center">
+            <p className="eyebrow">{d.testimonialsSection.eyebrow}</p>
+            <Decode as="h2" className="band__title" text={d.testimonialsSection.title} />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-            {d.testimonials.map((t, i) => (
-              <div
-                key={i}
-                style={{
-                  backgroundColor: 'var(--color-surface)',
-                  border: '1px solid var(--color-border)',
-                  padding: '2rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1rem',
-                }}
-              >
-                {/* Stars */}
-                <div style={{ color: '#d4a853', fontSize: '0.85rem', letterSpacing: '2px' }}>★★★★★</div>
-                <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 300, fontSize: '1.05rem', color: 'var(--color-text)', lineHeight: 1.6, margin: 0, flex: 1 }}>
-                  {t.text}
-                </p>
-                <div>
-                  <p style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '0.85rem', margin: 0 }}>
-                    {t.name}
-                  </p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', margin: 0 }}>
-                    {t.subject}
-                  </p>
-                </div>
-              </div>
+          <div className="tm-grid" data-rv-group>
+            {d.testimonials.map((t) => (
+              <figure key={t.name} className="tm">
+                <div className="tm__stars" aria-label={`${t.rating}/5`}>{'★'.repeat(t.rating)}</div>
+                <blockquote className="tm__text">{t.text}</blockquote>
+                <figcaption className="tm__who">
+                  <span className="tm__avatar" aria-hidden="true">{t.name.charAt(0)}</span>
+                  <span>
+                    <strong>{t.name}</strong>
+                    <span>{t.subject}</span>
+                  </span>
+                </figcaption>
+              </figure>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA BANNER ── */}
-      <section style={{ backgroundColor: 'var(--color-dark-soft)', padding: '6rem 0' }}>
-        <div className="container" style={{ textAlign: 'center' }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 300, fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', color: '#ffffff', marginBottom: '1rem', marginTop: 0 }}>
-            {d.ctaBanner.title}
-          </h2>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'rgba(255,255,255,0.65)', marginBottom: '2.5rem', maxWidth: '480px', margin: '0 auto 2.5rem' }}>
-            {d.ctaBanner.subtitle}
-          </p>
-          <button className="btn-white" onClick={() => navigate('/contact')}>
-            {d.ctaBanner.button}
-          </button>
-        </div>
-      </section>
-
+      {/* ── CTA ── */}
+      <CtaBand title={d.ctaBanner.title} subtitle={d.ctaBanner.subtitle} button={d.ctaBanner.button} />
     </div>
   );
 };

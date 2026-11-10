@@ -1,36 +1,24 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { schoolsData } from '../../data/schools_data';
 import SEO from '../common/SEO';
+import PageHero from '../common/PageHero';
+import CtaBand from '../common/CtaBand';
 
 const SchoolsPage = () => {
-  const navigate = useNavigate();
   const { language } = useTranslation();
   const d = schoolsData[language] || schoolsData.el;
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0 });
   }, []);
 
   return (
-    <div style={{ backgroundColor: 'var(--color-bg)' }}>
+    <div>
       <SEO page="schools" />
 
       {/* ── HERO ── */}
-      <section style={{ backgroundColor: 'var(--color-dark)', paddingTop: '10rem', paddingBottom: '5rem' }}>
-        <div className="container" style={{ textAlign: 'center' }}>
-          <p className="eyebrow" style={{ color: 'var(--color-teal-light)', marginBottom: '1rem' }}>
-            {d.hero.eyebrow}
-          </p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 300, fontSize: 'clamp(3rem, 6vw, 5rem)', color: '#ffffff', marginTop: 0, marginBottom: '1.25rem' }}>
-            {d.hero.title}
-          </h1>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'rgba(255,255,255,0.6)', maxWidth: '640px', margin: '0 auto', lineHeight: 1.7 }}>
-            {d.hero.subtitle}
-          </p>
-        </div>
-      </section>
+      <PageHero eyebrow={d.hero.eyebrow} title={d.hero.title} subtitle={d.hero.subtitle} />
 
       {/* ── INTRO ── */}
       <section style={{ padding: '4.5rem 0 1rem' }}>
@@ -60,7 +48,7 @@ const SchoolsPage = () => {
                   <div style={{ width: '2.75rem', height: '2.75rem', borderRadius: '50%', backgroundColor: 'var(--color-teal-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <Icon size={20} style={{ color: 'var(--color-teal)' }} />
                   </div>
-                  <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: '1.5rem', margin: 0 }}>
+                  <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: '1.5rem', margin: 0 }}>
                     {section.title}
                   </h2>
                 </div>
@@ -104,7 +92,7 @@ const SchoolsPage = () => {
               textAlign: 'center',
             }}
           >
-            <h3 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: '1.3rem', marginTop: 0, marginBottom: '0.6rem', color: 'var(--color-teal)' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: '1.3rem', marginTop: 0, marginBottom: '0.6rem', color: 'var(--color-teal)' }}>
               {d.openNote.title}
             </h3>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--color-text)', lineHeight: 1.7, margin: 0 }}>
@@ -115,16 +103,7 @@ const SchoolsPage = () => {
       </section>
 
       {/* ── CTA ── */}
-      <section style={{ backgroundColor: 'var(--color-dark-soft)', padding: '6rem 0' }}>
-        <div className="container" style={{ textAlign: 'center' }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 300, fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', color: '#ffffff', marginTop: 0, marginBottom: '2rem', maxWidth: '620px', marginLeft: 'auto', marginRight: 'auto' }}>
-            {d.cta.title}
-          </h2>
-          <button className="btn-white" onClick={() => navigate('/contact')}>
-            {d.cta.button}
-          </button>
-        </div>
-      </section>
+      <CtaBand title={d.cta.title} button={d.cta.button} />
 
     </div>
   );

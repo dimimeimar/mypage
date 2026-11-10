@@ -4,6 +4,8 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { subjectsData, subjectsPageText } from '../../data/subjects';
 import { stripTonos } from '../../utils/text';
 import { Code2, Calculator, Atom, BookOpen, Database, Globe, Cpu, Gamepad2 } from 'lucide-react';
+import PageHero from '../common/PageHero';
+import CtaBand from '../common/CtaBand';
 
 const ICON_MAP = {
   university: BookOpen,
@@ -22,7 +24,7 @@ const SubjectsPage = () => {
   const [activeFilter, setActiveFilter] = useState('all');
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0 });
   }, []);
 
   const currentSubjects = subjectsData[language] || subjectsData.el;
@@ -34,19 +36,10 @@ const SubjectsPage = () => {
     : Object.entries(currentSubjects).filter(([k]) => k === activeFilter);
 
   return (
-    <div style={{ backgroundColor: 'var(--color-bg)' }}>
+    <div>
 
       {/* ── HERO ── */}
-      <section style={{ backgroundColor: '#0f0f0f', paddingTop: '10rem', paddingBottom: '5rem' }}>
-        <div className="container" style={{ textAlign: 'center' }}>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 300, fontSize: 'clamp(3rem, 6vw, 5rem)', color: '#ffffff', marginTop: 0, marginBottom: '1.25rem' }}>
-            {pt.hero.title}
-          </h1>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'rgba(255,255,255,0.6)', maxWidth: '540px', margin: '0 auto 0', lineHeight: 1.7 }}>
-            {pt.hero.subtitle}
-          </p>
-        </div>
-      </section>
+      <PageHero seo="subjects" title={pt.hero.title} subtitle={pt.hero.subtitle} />
 
       {/* ── FILTERS ── */}
       <section style={{ backgroundColor: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)', padding: '1.5rem 0', position: 'sticky', top: '72px', zIndex: 50 }}>
@@ -113,7 +106,7 @@ const SubjectsPage = () => {
                 {/* Section header */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem', paddingBottom: '1rem', borderBottom: '1px solid var(--color-border)' }}>
                   <SectionIcon size={20} style={{ color: 'var(--color-teal)' }} />
-                  <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: '1.75rem', margin: 0 }}>
+                  <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: '1.75rem', margin: 0 }}>
                     {section.title}
                   </h2>
                   <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.72rem', color: 'var(--color-text-muted)', fontWeight: 500, letterSpacing: '0.06em', marginLeft: 'auto' }}>
@@ -128,7 +121,7 @@ const SubjectsPage = () => {
                         {stripTonos(cat.name)}
                       </p>
                     )}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1px', backgroundColor: 'var(--color-border)' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.6rem' }}>
                       {cat.subjects.map((subj, si) => {
                         const label = typeof subj === 'string' ? subj : subj.name || subj;
                         return (
@@ -171,19 +164,7 @@ const SubjectsPage = () => {
       </section>
 
       {/* ── CTA ── */}
-      <section style={{ backgroundColor: 'var(--color-dark-soft)', padding: '6rem 0' }}>
-        <div className="container" style={{ textAlign: 'center' }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 300, fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#ffffff', marginTop: 0, marginBottom: '1rem' }}>
-            {pt.cta.title}
-          </h2>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(255,255,255,0.6)', maxWidth: '440px', margin: '0 auto 2.5rem', lineHeight: 1.7 }}>
-            {pt.cta.subtitle}
-          </p>
-          <button className="btn-white" onClick={() => navigate('/contact')}>
-            {pt.cta.button}
-          </button>
-        </div>
-      </section>
+      <CtaBand title={pt.cta.title} subtitle={pt.cta.subtitle} button={pt.cta.button} />
 
     </div>
   );

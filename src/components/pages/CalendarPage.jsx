@@ -28,6 +28,7 @@ import {
 } from '../../services/calendarService';
 import { useTranslation } from '../../hooks/useTranslation';
 import { calendarData, STATUS_COLORS } from '../../data/calendar_data';
+import PageHero from '../common/PageHero';
 
 moment.updateLocale('el', { week: { dow: 1 } }); // Δευτέρα πρώτη
 const localizer = momentLocalizer(moment);
@@ -215,7 +216,7 @@ const CalendarPage = () => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#0f0f0f' }}>
+            <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'transparent' }}>
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-b-4 mx-auto mb-4" style={{ borderColor: 'var(--color-teal)' }}></div>
                     <p className="font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>{t.loading}</p>
@@ -225,19 +226,10 @@ const CalendarPage = () => {
     }
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <div className="min-h-screen">
 
             {/* ── HERO ── */}
-            <section style={{ backgroundColor: '#0f0f0f', paddingTop: '6.5rem', paddingBottom: '1.5rem' }}>
-                <div className="container" style={{ textAlign: 'center' }}>
-                    <h1 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 300, fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', color: '#ffffff', marginTop: 0, marginBottom: '0.5rem' }}>
-                        {t.hero.title}
-                    </h1>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', maxWidth: '480px', margin: '0 auto' }}>
-                        {t.hero.subtitle}
-                    </p>
-                </div>
-            </section>
+            <PageHero seo="calendar" compact title={t.hero.title} subtitle={t.hero.subtitle} />
 
             {/* Calendar Section */}
             <section className="container pb-12" style={{ paddingTop: '2.5rem' }}>
@@ -292,7 +284,7 @@ const CalendarPage = () => {
             {/* Legend Section */}
             <section style={{ padding: '3rem 0' }}>
                 <div className="container">
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1px', backgroundColor: 'var(--color-border)', maxWidth: '900px', margin: '0 auto' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.6rem', maxWidth: '900px', margin: '0 auto' }}>
                         {t.legend.map((item) => {
                             const Icon = LEGEND_ICONS[item.key];
                             return (

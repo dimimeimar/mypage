@@ -23,7 +23,8 @@
     "react-big-calendar": "^1.19.4",
     "react-dom": "^19.1.0",
     "react-helmet-async": "^3.0.0",
-    "react-router-dom": "^7.7.1"
+    "react-router-dom": "^7.7.1",
+    "three": "^0.170.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",

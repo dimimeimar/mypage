@@ -9,7 +9,11 @@ export const homeData = {
       title: 'Πληροφορική, Μαθηματικά & Φυσική',
       subtitle: 'Δια ζώσης στη Θεσσαλονίκη ή online, οπουδήποτε στον κόσμο.',
       ctaPrimary: 'Επικοινωνηστε',
-      ctaSecondary: 'Δειτε Μαθηματα'
+      ctaSecondary: 'Δειτε Μαθηματα',
+      name: 'Δημήτρης Μεϊμαρίδης',
+      // Λεζάντες του 3D σχήματος στο hero - ένα για κάθε πρόγραμμα (ίδια σειρά με τα programs)
+      shapes: ['Δυαδικο δεντρο', 'Κομβος τορου', 'Ατομο', 'Low-poly mesh'],
+      dragHint: 'Συρε για περιστροφη'
     },
     search: {
       placeholder: 'Αναζητήστε μάθημα...'
@@ -23,6 +27,13 @@ export const homeData = {
     philosophy: {
       eyebrow: 'Φιλοσοφια',
       quote: 'Στόχος δεν είναι να γεμίσεις τους μαθητές με πληροφορίες, αλλά να τους κινήσεις την περιέργεια που τους κάνει να θέλουν να αναζητήσουν.'
+    },
+    codeDemo: {
+      eyebrow: 'Γλωσσες Προγραμματισμου',
+      title: 'Μία ιδέα, πέντε γλώσσες',
+      body: 'Η αναδρομή είναι η ίδια είτε γράφεις Python είτε C++. Στο μάθημα χτίζουμε πρώτα τη λογική, και μετά η σύνταξη κάθε γλώσσας έρχεται εύκολα.',
+      outputLabel: 'Έξοδος',
+      cta: 'Ολα τα Μαθηματα'
     },
     programsSection: {
       eyebrow: 'Τι Διδασκω',
@@ -91,7 +102,10 @@ export const homeData = {
       title: 'Private Tutoring in Computer Science, Mathematics & Physics',
       subtitle: 'In-person in Thessaloniki or online, anywhere in the world. Also offering Game Development lessons.',
       ctaPrimary: 'Get in Touch',
-      ctaSecondary: 'View Programs'
+      ctaSecondary: 'View Programs',
+      name: 'Dimitris Meimaridis',
+      shapes: ['Binary tree', 'Torus knot', 'Atom', 'Low-poly mesh'],
+      dragHint: 'Drag to rotate'
     },
     search: {
       placeholder: 'Search for a subject...'
@@ -105,6 +119,13 @@ export const homeData = {
     philosophy: {
       eyebrow: 'Philosophy',
       quote: '"The goal is not to fill students with information, but to ignite the curiosity that makes them want to seek it themselves."'
+    },
+    codeDemo: {
+      eyebrow: 'Programming Languages',
+      title: 'One idea, five languages',
+      body: 'Recursion is the same whether you write Python or C++. In our lessons we build the logic first, and after that the syntax of each language comes easily.',
+      outputLabel: 'Output',
+      cta: 'All Subjects'
     },
     programsSection: {
       eyebrow: 'What I Teach',

@@ -283,3 +283,57 @@
 .rbc-event {
   animation: eventAppear 0.3s ease-out;
 }
+/* ════════════════════════════════════════════════════════════════════
+   Θεματικά χρώματα ημερολογίου (όλα τα θέματα): αντικαθιστούν τα παλιά
+   σταθερά ανοιχτά χρώματα ώστε το ημερολόγιο να "δένει" με Cosmos/Matrix.
+   ════════════════════════════════════════════════════════════════════ */
+.rbc-calendar { color: var(--color-text); }
+.rbc-header {
+  background: var(--color-teal-pale);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+.rbc-header + .rbc-header,
+.rbc-timeslot-group,
+.rbc-month-view,
+.rbc-month-row,
+.rbc-agenda-view,
+.rbc-time-view,
+.rbc-time-header,
+.rbc-time-header-content,
+.rbc-time-content,
+.rbc-time-content > * + * > *,
+.rbc-day-bg + .rbc-day-bg,
+.rbc-month-row + .rbc-month-row,
+.rbc-day-slot .rbc-time-slot,
+.rbc-time-slot,
+.rbc-time-header.rbc-overflowing {
+  border-color: var(--color-border) !important;
+}
+.rbc-off-range-bg,
+.rbc-agenda-date-cell { background-color: var(--color-teal-pale); color: var(--color-text-muted); }
+.rbc-date-cell > a,
+.rbc-label { color: var(--color-text-muted); }
+.rbc-toolbar button {
+  color: var(--color-text);
+  border-color: var(--color-border);
+  background: transparent;
+}
+.rbc-toolbar button:hover,
+.rbc-toolbar button:focus {
+  background-color: var(--color-teal-pale);
+  color: var(--color-text);
+  border-color: var(--color-teal);
+}
+.rbc-toolbar-label { color: var(--color-teal); font-family: var(--font-display); }
+.rbc-toolbar button.rbc-active,
+.rbc-toolbar button.rbc-active:hover,
+.rbc-toolbar button.rbc-active:focus {
+  background: var(--color-teal);
+  color: var(--color-on-accent);
+  border-color: var(--color-teal);
+  box-shadow: 0 6px 18px -8px var(--color-teal);
+}
+.rbc-time-content::-webkit-scrollbar-track { background: transparent; }
+.rbc-time-content::-webkit-scrollbar-thumb,
+.rbc-time-content::-webkit-scrollbar-thumb:hover { background: var(--color-border); }

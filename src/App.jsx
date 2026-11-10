@@ -3,20 +3,23 @@ import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Layout from './components/layout/Layout.jsx';
 import HomePage from './components/pages/HomePage.jsx';
-import ServicesPage from './components/pages/ServicesPage.jsx';
-import SubjectsPage from './components/pages/SubjectsPage.jsx';
-import SchoolsPage from './components/pages/SchoolsPage.jsx';
-import ConsultingPage from './components/pages/ConsultingPage.jsx';
-import RepairsPage from './components/pages/RepairsPage.jsx';
-import AboutPage from './components/pages/AboutPage.jsx';
-import ContactPage from './components/pages/ContactPage.jsx';
-import CalendarPage from './components/pages/CalendarPage.jsx';
 import { LanguageProvider } from './contexts/LanguageContext';
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { analytics } from './firebase';
 import { logEvent } from 'firebase/analytics';
 
 import { ROUTES } from './constants/routes';
+
+// Οι εσωτερικές σελίδες φορτώνονται μόνο όταν τις επισκεφθεί κάποιος (code splitting),
+// ώστε η Αρχική να ανοίγει γρήγορα χωρίς το βάρος του ημερολογίου, του χάρτη κλπ.
+const ServicesPage = lazy(() => import('./components/pages/ServicesPage.jsx'));
+const SubjectsPage = lazy(() => import('./components/pages/SubjectsPage.jsx'));
+const SchoolsPage = lazy(() => import('./components/pages/SchoolsPage.jsx'));
+const ConsultingPage = lazy(() => import('./components/pages/ConsultingPage.jsx'));
+const RepairsPage = lazy(() => import('./components/pages/RepairsPage.jsx'));
+const AboutPage = lazy(() => import('./components/pages/AboutPage.jsx'));
+const ContactPage = lazy(() => import('./components/pages/ContactPage.jsx'));
+const CalendarPage = lazy(() => import('./components/pages/CalendarPage.jsx'));
 
 function App() {
 
@@ -32,6 +35,7 @@ function App() {
       <ThemeProvider>
         <LanguageProvider>
           <Layout>
+            <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
             <Routes>
               <Route path={ROUTES.HOME} element={<HomePage />} />
               <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
@@ -47,6 +51,7 @@ function App() {
               {/* Redirect any unknown routes to home */}
               <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
             </Routes>
+            </Suspense>
           </Layout>
         </LanguageProvider>
       </ThemeProvider>

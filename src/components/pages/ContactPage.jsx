@@ -5,6 +5,7 @@ import { CONTACT_INFO, EXTERNAL_LINKS } from '../../constants/routes';
 import { contactData } from '../../data/contact_data';
 import OpenStreetMap from '../common/OpenStreetMap';
 import { Mail, Phone, MapPin, MessageSquare, Send, MessageCircle, Video } from 'lucide-react';
+import PageHero from '../common/PageHero';
 
 // EmailJS - βλ. https://dashboard.emailjs.com. Χρειάζεται VITE_EMAILJS_PUBLIC_KEY στο .env
 // (Επιβεβαίωσε ότι τα ονόματα των μεταβλητών ταιριάζουν με το template σου στο dashboard.)
@@ -22,7 +23,7 @@ const ContactPage = () => {
   const dateLocale = language === 'en' ? 'en-US' : 'el-GR';
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0 });
   }, []);
 
   const validate = () => {
@@ -77,19 +78,10 @@ const ContactPage = () => {
   ];
 
   return (
-    <div style={{ backgroundColor: 'var(--color-bg)' }}>
+    <div>
 
       {/* ── HERO ── */}
-      <section style={{ backgroundColor: '#0f0f0f', paddingTop: '10rem', paddingBottom: '5rem' }}>
-        <div className="container" style={{ textAlign: 'center' }}>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 300, fontSize: 'clamp(3rem, 6vw, 5rem)', color: '#ffffff', marginTop: 0, marginBottom: '1.25rem' }}>
-            {d.hero.title}
-          </h1>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'rgba(255,255,255,0.6)', maxWidth: '540px', margin: '0 auto', lineHeight: 1.7 }}>
-            {d.hero.subtitle}
-          </p>
-        </div>
-      </section>
+      <PageHero seo="contact" title={d.hero.title} subtitle={d.hero.subtitle} />
 
       {/* ── MAIN CONTENT ── */}
       <section style={{ padding: '6rem 0', backgroundColor: 'var(--color-surface)' }}>
@@ -101,7 +93,7 @@ const ContactPage = () => {
               <p className="eyebrow" style={{ marginBottom: '0.75rem' }}>
                 {d.details.eyebrow}
               </p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', lineHeight: 1.2, marginTop: 0, marginBottom: '1rem' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', lineHeight: 1.2, marginTop: 0, marginBottom: '1rem' }}>
                 {d.details.title}
               </h2>
               <div className="accent-line" />
@@ -222,14 +214,14 @@ const ContactPage = () => {
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
             <p className="eyebrow" style={{ marginBottom: '0.75rem' }}>{d.quickContactSection.eyebrow}</p>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', margin: 0 }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', margin: 0 }}>
               {d.quickContactSection.title}
             </h2>
           </div>
           <p style={{ textAlign: 'center', fontFamily: 'var(--font-body)', fontSize: '0.85rem', color: 'var(--color-text-muted)', marginBottom: '3rem' }}>
             {d.quickContactSection.note}
           </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1px', backgroundColor: 'var(--color-border)', maxWidth: '900px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.6rem', maxWidth: '900px', margin: '0 auto' }}>
             {quickContactCards.map((card, i) => (
               <a
                 key={i}
@@ -261,14 +253,14 @@ const ContactPage = () => {
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <p className="eyebrow" style={{ marginBottom: '0.75rem' }}>{d.faqSection.eyebrow}</p>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', margin: 0 }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', margin: 0 }}>
               {d.faqSection.title}
             </h2>
           </div>
           <div style={{ maxWidth: '700px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '0' }}>
             {d.faq.map((item, i) => (
               <div key={i} style={{ paddingBottom: '1.75rem', marginBottom: '1.75rem', borderBottom: i < d.faq.length - 1 ? '1px solid var(--color-border)' : 'none' }}>
-                <h3 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: '1.15rem', margin: '0 0 0.5rem' }}>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: '1.15rem', margin: '0 0 0.5rem' }}>
                   {item.question}
                 </h3>
                 <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--color-text-muted)', lineHeight: 1.7, margin: 0 }}>
@@ -285,7 +277,7 @@ const ContactPage = () => {
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
             <p className="eyebrow" style={{ marginBottom: '0.75rem' }}>{d.teachingAreasSection.eyebrow}</p>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', margin: '0 0 0.75rem' }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', margin: '0 0 0.75rem' }}>
               {d.teachingAreasSection.title}
             </h2>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
