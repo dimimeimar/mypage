@@ -1,10 +1,9 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { flushSync } from 'react-dom';
 
-// Τα keys μένουν ίδια με πριν (συμβατότητα με το localStorage των επισκεπτών):
-//   default = Cosmos (σκούρο), classic = Notebook (φωτεινό), matrix = Matrix
-export const THEMES = ['default', 'classic', 'matrix'];
-const SCHEMES = { default: 'dark', classic: 'light', matrix: 'dark' };
+//   default = Κλασικό (το αρχικό στυλ), notebook = Τετράδιο, matrix = Matrix (fan mode)
+export const THEMES = ['default', 'notebook', 'matrix'];
+const SCHEMES = { default: 'light', notebook: 'light', matrix: 'dark' };
 const STORAGE_KEY = 'site-theme';
 
 const ThemeContext = createContext();

@@ -13,21 +13,17 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## Redesign (branch `redesign`)
 
-Τρία θέματα, το καθένα με δικό του κινούμενο φόντο (`src/components/fx/Backdrop.jsx`):
+Τρία θέματα (`src/styles/global.css`, tokens στην αρχή του αρχείου):
 
-| key (localStorage) | Όνομα | Φόντο |
+| key (localStorage) | Όνομα | Τι είναι |
 | --- | --- | --- |
-| `default` | Σύμπαν / Cosmos | αστρικό πεδίο με parallax, σέλας, πεφταστέρια |
-| `classic` | Τετράδιο / Notebook | τετραγωνισμένο χαρτί, γραφικές παραστάσεις που σχεδιάζονται |
-| `matrix` | Matrix | ψηφιακή βροχή 0/1 σε 3 επίπεδα βάθους, scanlines, glitch |
+| `default` | Κλασικό | το αρχικό στυλ: σκούρο hero, λευκές ενότητες, serif πλάγιοι τίτλοι, teal |
+| `notebook` | Τετράδιο | φωτεινό, στατικό τετραγωνισμένο χαρτί |
+| `matrix` | Matrix | fan mode: ψηφιακή βροχή 0/1, scanlines, glitch, boot sequence |
 
-Νέα κομμάτια:
-
-- `fx/HeroScene.jsx` - 3D (three.js, lazy chunk): 9.000 σωματίδια που μεταμορφώνονται σε δυαδικό δέντρο / κόμβο τόρου / άτομο / εικοσάεδρο, ένα για κάθε πρόγραμμα. Στο Matrix τα σωματίδια είναι ψηφία 0/1.
-- `fx/Decode.jsx` - τίτλοι που αποκαλύπτονται λέξη-λέξη (ή αποκρυπτογραφούνται από 0/1 στο Matrix).
-- `fx/TiltCard.jsx`, `fx/CodeDemo.jsx`, `fx/MatrixBoot.jsx`, `fx/Chrome.jsx` (scroll progress, cursor glow).
+- `fx/HeroScene.jsx` - το 3D γραφικό του hero (three.js, lazy chunk): σωματίδια που μεταμορφώνονται σε δυαδικό δέντρο / κόμβο τόρου / άτομο / εικοσάεδρο, ένα για κάθε πρόγραμμα.
+- `fx/Backdrop.jsx`, `fx/MatrixBoot.jsx`, `fx/Decode.jsx` - εφέ που τρέχουν μόνο στο Matrix.
+- `fx/CodeDemo.jsx`, `fx/TiltCard.jsx` - ενότητα κώδικα και κάρτες προγραμμάτων της αρχικής.
 - `common/PageHero.jsx`, `common/CtaBand.jsx`, `common/StatsBand.jsx` - κοινά για όλες τις σελίδες.
-- `hooks/useAutoReveal.js` - scroll reveal σε όλες τις σελίδες χωρίς αλλαγές στο JSX τους.
-- Όλα τα χρώματα/γραμματοσειρές ορίζονται στα tokens του `src/styles/global.css`.
 
-Σέβεται το `prefers-reduced-motion` (στατικά καρέ, χωρίς animations).
+Σέβεται το `prefers-reduced-motion`.

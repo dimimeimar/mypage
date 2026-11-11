@@ -53,7 +53,7 @@ const Navigation = () => {
         <div className="container">
           <div className="nav__bar">
             <Link to={ROUTES.HOME} className="nav__logo" aria-label="Meimaridis - Home">
-              meimaridis<i>_</i>
+              meimaridis
             </Link>
 
             {!isMobile && (

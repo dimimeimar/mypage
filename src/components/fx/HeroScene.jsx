@@ -153,8 +153,9 @@ function shapeIcosa(n) {
 const SHAPES = [shapeTree, shapeKnot, shapeAtom, shapeIcosa];
 
 const LOOKS = {
-  default: { a: '#35e0c8', b: '#ffb454', blending: AdditiveBlending, glyph: 0, size: 15, opacity: 0.85, share: 1 },
-  classic: { a: '#2456e6', b: '#f04e16', blending: NormalBlending, glyph: 0, size: 13, opacity: 0.8, share: 1 },
+  // Κλασικό: σκούρο hero, φωτεινά σωματίδια. Τετράδιο: μελάνι πάνω σε χαρτί.
+  default: { a: '#7fd6cf', b: '#ffffff', blending: AdditiveBlending, glyph: 0, size: 14, opacity: 0.8, share: 1 },
+  notebook: { a: '#2456e6', b: '#f04e16', blending: NormalBlending, glyph: 0, size: 13, opacity: 0.8, share: 1 },
   matrix: { a: '#00ff41', b: '#c8ffd6', blending: AdditiveBlending, glyph: 1, size: 54, opacity: 0.95, share: 0.38 },
 };
 

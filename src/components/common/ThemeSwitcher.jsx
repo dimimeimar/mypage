@@ -6,14 +6,14 @@ import { stripTonos } from '../../utils/text';
 
 const THEME_INFO = {
   default: {
-    swatch: 'radial-gradient(circle at 30% 30%, #35e0c8, #1b2a6b 60%, #060a18)',
-    label: { el: 'Σύμπαν', en: 'Cosmos' },
-    hint: { el: 'Σκούρο, αστέρια', en: 'Dark, starfield' },
+    swatch: 'linear-gradient(135deg, #0f0f0f 50%, #2d7a7a 50%)',
+    label: { el: 'Κλασικό', en: 'Classic' },
+    hint: { el: 'Το βασικό στυλ', en: 'The standard look' },
   },
-  classic: {
+  notebook: {
     swatch: 'linear-gradient(135deg, #ffffff 50%, #f04e16 50%)',
     label: { el: 'Τετράδιο', en: 'Notebook' },
-    hint: { el: 'Φωτεινό, γραφήματα', en: 'Light, plotted curves' },
+    hint: { el: 'Φωτεινό, τετραγωνισμένο χαρτί', en: 'Light, squared paper' },
   },
   matrix: {
     swatch: 'repeating-linear-gradient(90deg, #00ff41 0 2px, #000 2px 5px)',

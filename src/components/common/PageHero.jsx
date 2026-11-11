@@ -5,7 +5,7 @@ import SEO from './SEO';
    seo: key του seo_data.js (προαιρετικό) - βάζει και τα meta tags της σελίδας.
    image: προαιρετική φωτογραφία φόντου. compact: χαμηλότερο (π.χ. Ημερολόγιο). */
 const PageHero = ({ eyebrow, title, subtitle, image, compact = false, seo }) => (
-  <section className={`page-hero fx-clear${compact ? ' page-hero--compact' : ''}`} data-rv="off">
+  <section className={`page-hero${compact ? ' page-hero--compact' : ''}`}>
     {seo && <SEO page={seo} />}
     {image && <img className="page-hero__img" src={image} alt="" />}
     <div className="container page-hero__inner">

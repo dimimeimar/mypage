@@ -1,11 +1,8 @@
 import { createElement, useLayoutEffect, useRef } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 
-const escapeHtml = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-
-/* Τίτλος που "αποκαλύπτεται" όταν μπει στην οθόνη.
-   - Cosmos / Notebook: οι λέξεις ανεβαίνουν μία μία μέσα από θόλωμα.
-   - Matrix: ο τίτλος αποκρυπτογραφείται από 0 και 1.
+/* Τίτλος που στο θέμα Matrix "αποκρυπτογραφείται" από 0 και 1 όταν μπει στην οθόνη.
+   Στα άλλα θέματα είναι απλό κείμενο.
    Χρήση: <Decode as="h1" className="hero__title" text={d.hero.title} /> */
 const Decode = ({ as = 'span', text = '', className = '', delay = 0, ...rest }) => {
   const ref = useRef(null);
@@ -18,13 +15,11 @@ const Decode = ({ as = 'span', text = '', className = '', delay = 0, ...rest }) 
     let raf = 0;
     let timer = 0;
 
-    if (reduced) {
-      el.textContent = text;
-      return undefined;
-    }
+    // Κλασικό / Τετράδιο: απλό κείμενο, χωρίς εφέ
+    el.textContent = text;
+    if (reduced) return undefined;
 
     if (theme === 'matrix') {
-      el.classList.remove('dc-in');
       el.textContent = text.replace(/\S/g, () => (Math.random() < 0.5 ? '0' : '1'));
       const run = () => {
         const t0 = performance.now();
@@ -48,20 +43,7 @@ const Decode = ({ as = 'span', text = '', className = '', delay = 0, ...rest }) 
       return () => { io.disconnect(); cancelAnimationFrame(raf); clearTimeout(timer); };
     }
 
-    el.classList.remove('dc-in');
-    el.style.setProperty('--dc-delay', `${delay}ms`);
-    el.innerHTML = text
-      .split(/\s+/)
-      .filter(Boolean)
-      .map((w, i) => `<span class="dc-w" style="--i:${i}">${escapeHtml(w)}</span>`)
-      .join(' ');
-    const io = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting) return;
-      io.disconnect();
-      el.classList.add('dc-in');
-    }, { threshold: 0.2 });
-    io.observe(el);
-    return () => io.disconnect();
+    return undefined;
   }, [text, theme, delay]);
 
   // Το περιεχόμενο το διαχειρίζεται το effect - το React δεν αποδίδει children εδώ.

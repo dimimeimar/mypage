@@ -41,7 +41,7 @@
   <!-- Fonts: προσύνδεση για πιο γρήγορη φόρτωση -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <meta name="theme-color" content="#060a18">
+  <meta name="theme-color" content="#0f0f0f">
 
   <!-- Εφαρμογή του αποθηκευμένου θέματος ΠΡΙΝ το πρώτο paint (αλλιώς "αναβοσβήνει" το default) -->
   <script>
@@ -49,8 +49,8 @@
       try {
         var t = localStorage.getItem('site-theme');
         var root = document.documentElement;
-        if (t === 'classic' || t === 'matrix') root.setAttribute('data-theme', t);
-        root.setAttribute('data-scheme', t === 'classic' ? 'light' : 'dark');
+        if (t === 'notebook' || t === 'matrix') root.setAttribute('data-theme', t);
+        root.setAttribute('data-scheme', t === 'matrix' ? 'dark' : 'light');
       } catch (e) {}
     })();
   </script>

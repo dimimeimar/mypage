@@ -21,7 +21,7 @@ const Footer = () => {
       <div className="container">
         <div className="footer__grid">
           <div>
-            <p className="footer__brand">meimaridis<i>_</i></p>
+            <p className="footer__brand">meimaridis</p>
             <p style={{ fontSize: '0.9rem', lineHeight: 1.7, margin: 0, maxWidth: '22rem' }}>{d.tagline}</p>
             <div className="footer__social">
               {SOCIAL.map(({ href, icon: Icon, label }) => (

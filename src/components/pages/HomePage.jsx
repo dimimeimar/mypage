@@ -52,7 +52,7 @@ const HomePage = () => {
       <SEO page="home" />
 
       {/* ── HERO ── */}
-      <section className="hero fx-clear" data-rv="off">
+      <section className="hero">
         <div className="container">
           <div className="hero__grid">
             <div>
@@ -125,7 +125,26 @@ const HomePage = () => {
             ))}
           </div>
         </div>
-        <div className="hero__scroll" aria-hidden="true" />
+      </section>
+
+      {/* ── INTRO VIDEO ── */}
+      <section className="band band--alt">
+        <div className="container">
+          <div className="band__head band__head--center">
+            <p className="eyebrow">{d.introVideo.eyebrow}</p>
+            <Decode as="h2" className="band__title" text={d.introVideo.title} />
+            <p className="band__lead" style={{ marginTop: 0 }}>{d.introVideo.subtitle}</p>
+          </div>
+          <div className="video-frame">
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${d.introVideo.youtubeId}`}
+              title={d.introVideo.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              loading="lazy"
+            />
+          </div>
+        </div>
       </section>
 
       {/* ── STATS ── */}
@@ -150,11 +169,11 @@ const HomePage = () => {
             </button>
           </div>
 
-          <div className="tilt-grid" data-rv-group>
+          <div className="tilt-grid">
             {d.programs.map((p, i) => {
               const Icon = PROGRAM_ICONS[i] || Code2;
               return (
-                <div key={p.number} style={{ perspective: '1200px' }}>
+                <div key={p.number} style={{ perspective: '1400px' }}>
                   <TiltCard
                     role="link"
                     tabIndex={0}
@@ -178,9 +197,9 @@ const HomePage = () => {
       </section>
 
       {/* ── CODE DEMO ── */}
-      <section className="band">
+      <section className="band band--alt">
         <div className="container">
-          <div className="code-split" data-rv-group>
+          <div className="code-split">
             <div>
               <p className="eyebrow">{d.codeDemo.eyebrow}</p>
               <Decode as="h2" className="band__title" text={d.codeDemo.title} />
@@ -190,26 +209,6 @@ const HomePage = () => {
               </button>
             </div>
             <CodeDemo outputLabel={d.codeDemo.outputLabel} />
-          </div>
-        </div>
-      </section>
-
-      {/* ── INTRO VIDEO ── */}
-      <section className="band">
-        <div className="container">
-          <div className="band__head band__head--center">
-            <p className="eyebrow">{d.introVideo.eyebrow}</p>
-            <Decode as="h2" className="band__title" text={d.introVideo.title} />
-            <p className="band__lead" style={{ marginTop: 0 }}>{d.introVideo.subtitle}</p>
-          </div>
-          <div className="video-frame">
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${d.introVideo.youtubeId}`}
-              title={d.introVideo.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              loading="lazy"
-            />
           </div>
         </div>
       </section>
@@ -225,18 +224,18 @@ const HomePage = () => {
       </section>
 
       {/* ── WHY ME + ACHIEVEMENTS ── */}
-      <section className="band">
+      <section className="band band--alt">
         <div className="container">
           <div className="band__head band__head--center">
             <p className="eyebrow">{d.achievementsSection.eyebrow}</p>
             <Decode as="h2" className="band__title" text={d.achievementsSection.title} />
           </div>
 
-          <div className="feat-grid" data-rv-group style={{ marginBottom: '1.25rem' }}>
+          <div className="feat-grid" style={{ marginBottom: '1.25rem' }}>
             {d.features.map((f) => {
               const Icon = f.icon;
               return (
-                <div key={f.title} className="feat feat--big">
+                <div key={f.title} className="feat">
                   <Icon size={26} className="feat__icon" />
                   <h3>{f.title}</h3>
                   <p>{f.description}</p>
@@ -244,7 +243,7 @@ const HomePage = () => {
               );
             })}
           </div>
-          <div className="feat-grid" data-rv-group style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+          <div className="feat-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
             {d.achievements.map((a) => {
               const Icon = a.icon;
               return (
@@ -291,14 +290,14 @@ const HomePage = () => {
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section className="band">
+      <section className="band band--alt">
         <div className="container">
           <div className="band__head band__head--center">
             <p className="eyebrow">{d.testimonialsSection.eyebrow}</p>
             <Decode as="h2" className="band__title" text={d.testimonialsSection.title} />
           </div>
 
-          <div className="tm-grid" data-rv-group>
+          <div className="tm-grid">
             {d.testimonials.map((t) => (
               <figure key={t.name} className="tm">
                 <div className="tm__stars" aria-label={`${t.rating}/5`}>{'★'.repeat(t.rating)}</div>
