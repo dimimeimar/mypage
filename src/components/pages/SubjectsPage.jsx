@@ -39,7 +39,7 @@ const SubjectsPage = () => {
     <div>
 
       {/* ── HERO ── */}
-      <PageHero seo="subjects" title={pt.hero.title} subtitle={pt.hero.subtitle} />
+      <PageHero art="plot" seo="subjects" title={pt.hero.title} subtitle={pt.hero.subtitle} />
 
       {/* ── FILTERS ── */}
       <section style={{ backgroundColor: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)', padding: '1.5rem 0', position: 'sticky', top: '72px', zIndex: 50 }}>
@@ -57,7 +57,7 @@ const SubjectsPage = () => {
                 border: activeFilter === 'all' ? '1px solid var(--color-dark)' : '1px solid var(--color-border)',
                 borderRadius: '9999px',
                 backgroundColor: activeFilter === 'all' ? 'var(--color-dark)' : 'transparent',
-                color: activeFilter === 'all' ? '#ffffff' : 'var(--color-text-muted)',
+                color: activeFilter === 'all' ? 'var(--color-on-accent)' : 'var(--color-text-muted)',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
               }}
@@ -82,7 +82,7 @@ const SubjectsPage = () => {
                     border: isActive ? '1px solid var(--color-dark)' : '1px solid var(--color-border)',
                     borderRadius: '9999px',
                     backgroundColor: isActive ? 'var(--color-dark)' : 'transparent',
-                    color: isActive ? '#ffffff' : 'var(--color-text-muted)',
+                    color: isActive ? 'var(--color-on-accent)' : 'var(--color-text-muted)',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                   }}

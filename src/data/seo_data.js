@@ -99,5 +99,38 @@ export const seoData = {
       title: 'Book a Lesson - Calendar',
       description: 'Book your lesson online and see real-time availability.'
     }
+  },
+  work: {
+    path: '/work',
+    el: {
+      title: 'Τα Έργα μου | Ιστοσελίδες και Εφαρμογές - Δημήτρης Μεϊμαρίδης',
+      description: 'Ιστοσελίδες, εφαρμογές και παιχνίδια που έχω χτίσει παράλληλα με τη διδασκαλία.'
+    },
+    en: {
+      title: 'My Work | Websites and Applications - Dimitris Meimaridis',
+      description: 'Websites, applications and games I have built alongside teaching.'
+    }
+  },
+  exercises: {
+    path: '/exercises',
+    el: {
+      title: 'Διαδραστικές Ασκήσεις Προγραμματισμού | Πίνακας Τιμών, Δυαδικό Σύστημα',
+      description: 'Δωρεάν διαδραστικές ασκήσεις: προβλέψτε τι τυπώνει ένα πρόγραμμα και δείτε την εκτέλεση βήμα προς βήμα με πίνακα τιμών. Εξάσκηση στο δυαδικό σύστημα.'
+    },
+    en: {
+      title: 'Interactive Programming Exercises | Trace Tables, Binary Numbers',
+      description: 'Free interactive exercises: predict what a program prints and watch it run step by step with a trace table. Binary number practice.'
+    }
+  },
+  play: {
+    path: '/play',
+    el: {
+      title: 'Παιχνίδια Μάθησης | Έρχεται Σύντομα',
+      description: 'Μικρά παιχνίδια για αλγοριθμική σκέψη, μαθηματικά και φυσική. Έρχεται σύντομα.'
+    },
+    en: {
+      title: 'Learning Games | Coming Soon',
+      description: 'Small games for algorithmic thinking, mathematics and physics. Coming soon.'
+    }
   }
 };

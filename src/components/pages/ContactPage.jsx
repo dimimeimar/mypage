@@ -81,7 +81,7 @@ const ContactPage = () => {
     <div>
 
       {/* ── HERO ── */}
-      <PageHero seo="contact" title={d.hero.title} subtitle={d.hero.subtitle} />
+      <PageHero art="network" seo="contact" title={d.hero.title} subtitle={d.hero.subtitle} />
 
       {/* ── MAIN CONTENT ── */}
       <section style={{ padding: '6rem 0', backgroundColor: 'var(--color-surface)' }}>

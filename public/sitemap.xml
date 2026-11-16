@@ -93,4 +93,23 @@
     <lastmod>2026-07-12</lastmod>
   </url>
 
+
+  <url>
+    <loc>https://meimaridistutor.com/work</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meimaridistutor.com/work" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://meimaridistutor.com/work?lang=el" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2026-11-16</lastmod>
+  </url>
+
+  <url>
+    <loc>https://meimaridistutor.com/exercises</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://meimaridistutor.com/exercises" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://meimaridistutor.com/exercises?lang=el" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2026-11-16</lastmod>
+  </url>
+
 </urlset>

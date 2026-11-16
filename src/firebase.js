@@ -1,7 +1,6 @@
 // firebase.js (στο root του project)
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDpdzEeQ2FGat93Mh3CJP1sH16k_fFuS0c",
@@ -15,6 +14,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-const db = getFirestore(app);
 
-export { analytics, db };
+// Η βάση (Firestore) ορίζεται στο firestore.js, ώστε να φορτώνει μόνο στις σελίδες
+// που τη χρειάζονται (ημερολόγιο) και να μη βαραίνει την Αρχική.
+export { app, analytics };

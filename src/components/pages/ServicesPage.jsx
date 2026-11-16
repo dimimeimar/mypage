@@ -20,7 +20,7 @@ const ServicesPage = () => {
       <SEO page="services" />
 
       {/* ── HERO ── */}
-      <PageHero eyebrow={d.hero.eyebrow} title={d.hero.title} subtitle={d.hero.subtitle} />
+      <PageHero art="network" eyebrow={d.hero.eyebrow} title={d.hero.title} subtitle={d.hero.subtitle} />
 
       {/* ── SERVICE CARDS ── */}
       <section style={{ padding: '6rem 0' }}>

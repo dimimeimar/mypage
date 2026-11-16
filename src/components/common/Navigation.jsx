@@ -14,10 +14,10 @@ const Navigation = () => {
   const location = useLocation();
   const { language } = useLanguage();
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 980);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1120);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 980);
+    const handleResize = () => setIsMobile(window.innerWidth < 1120);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -44,7 +44,9 @@ const Navigation = () => {
 
   const isActive = (path) => location.pathname === path;
   const isActiveGroup = (item) =>
-    item.children ? location.pathname.startsWith(item.path) : isActive(item.path);
+    item.children
+      ? (item.path && location.pathname.startsWith(item.path)) || item.children.some((c) => isActive(c.path))
+      : isActive(item.path);
   const label = (key) => getString(`nav.${key}`, language);
 
   return (
@@ -77,11 +79,13 @@ const Navigation = () => {
                         {isOpen && (
                           <>
                             <div onClick={() => setOpenDropdown(null)} style={{ position: 'fixed', inset: 0, zIndex: 10 }} />
-                            <div className="menu-pop">
-                              {/* Link προς τη landing σελίδα Υπηρεσίες */}
-                              <Link to={item.path} className={`menu-pop__item menu-pop__item--head${isActive(item.path) ? ' is-active' : ''}`}>
-                                {label(item.key)} - {language === 'el' ? 'Ολες' : 'Overview'}
-                              </Link>
+                            <div className={`menu-pop${item.key === 'more' ? ' menu-pop--right' : ''}`}>
+                              {/* Link προς τη landing σελίδα της ομάδας (αν έχει) */}
+                              {item.path && (
+                                <Link to={item.path} className={`menu-pop__item menu-pop__item--head${isActive(item.path) ? ' is-active' : ''}`}>
+                                  {label(item.key)} - {language === 'el' ? 'Ολες' : 'Overview'}
+                                </Link>
+                              )}
                               {item.children.map((child) => (
                                 <Link key={child.key} to={child.path} className={`menu-pop__item${isActive(child.path) ? ' is-active' : ''}`}>
                                   {label(child.key)}
@@ -137,9 +141,11 @@ const Navigation = () => {
 
                   {expanded && (
                     <div className="mobile-menu__sub">
-                      <Link to={item.path} className="eyebrow" style={{ justifyContent: 'center' }}>
-                        {language === 'el' ? 'Ολες οι Υπηρεσιες' : 'All Services'}
-                      </Link>
+                      {item.path && (
+                        <Link to={item.path} className="eyebrow">
+                          {language === 'el' ? 'Ολες οι Υπηρεσιες' : 'All Services'}
+                        </Link>
+                      )}
                       {item.children.map((child) => (
                         <Link key={child.key} to={child.path} className={isActive(child.path) ? 'is-active' : ''}>
                           {label(child.key)}

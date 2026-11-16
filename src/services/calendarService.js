@@ -11,7 +11,7 @@ import {
   Timestamp,
   serverTimestamp
 } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '../firestore';
 
 // Collections
 const CALENDAR_EVENTS = 'calendar_events';
@@ -83,6 +83,30 @@ export const getAllEvents = async () => {
   } catch (error) {
     console.error('Error getting events:', error.code, error.message);
 return [];
+  }
+};
+
+/**
+ * Όπως το getAllEvents, αλλά επιστρέφει { ok, events } ώστε η αποτυχία να μη μοιάζει με "άδειο ημερολόγιο"
+ */
+export const fetchAllEvents = async () => {
+  try {
+    const snapshot = await getDocs(collection(db, CALENDAR_EVENTS));
+    const events = snapshot.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        ...data,
+        start: data.start?.toDate(),
+        end: data.end?.toDate(),
+        createdAt: data.createdAt?.toDate(),
+        canCancelUntil: data.canCancelUntil?.toDate()
+      };
+    });
+    return { ok: true, events };
+  } catch (error) {
+    console.error('Error getting events:', error.code, error.message);
+    return { ok: false, events: [] };
   }
 };
 

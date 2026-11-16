@@ -18,7 +18,7 @@ const RepairsPage = () => {
       <SEO page="repairs" />
 
       {/* ── HERO ── */}
-      <PageHero eyebrow={d.hero.eyebrow} title={d.hero.title} subtitle={d.hero.subtitle} />
+      <PageHero art="circuit" eyebrow={d.hero.eyebrow} title={d.hero.title} subtitle={d.hero.subtitle} />
 
       {/* ── INTRO ── */}
       <section style={{ padding: '4.5rem 0 1rem' }}>
@@ -99,7 +99,7 @@ const RepairsPage = () => {
                     height: '2.5rem',
                     borderRadius: '50%',
                     backgroundColor: 'var(--color-teal)',
-                    color: '#ffffff',
+                    color: 'var(--color-on-accent)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',

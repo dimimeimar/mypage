@@ -10,7 +10,11 @@ export const strings = {
       about: 'Σχετικα',
       contact: 'Επικοινωνια',
       schedule: 'Προγραμμα',
-      calendar: 'Ημερολογιο'
+      calendar: 'Ημερολογιο',
+      more: 'Περισσοτερα',
+      work: 'Τα Εργα μου',
+      exercises: 'Ασκησεις',
+      play: 'Παιχνιδια'
     },
     search: {
       placeholder: 'Αναζητήστε μάθημα...',
@@ -31,7 +35,11 @@ export const strings = {
       about: 'About',
       contact: 'Contact',
       schedule: 'Schedule',
-      calendar: 'Calendar'
+      calendar: 'Calendar',
+      more: 'More',
+      work: 'My Work',
+      exercises: 'Exercises',
+      play: 'Play'
     },
     search: {
       placeholder: 'Search for a subject...',

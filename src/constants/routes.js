@@ -9,6 +9,9 @@ export const ROUTES = {
   ABOUT: '/about',
   CONTACT: '/contact',
   CALENDAR: '/calendar',
+  WORK: '/work',
+  EXERCISES: '/exercises',
+  PLAY: '/play',
 };
 
 // Navigation items - τα 'children' δημιουργούν αυτόματα dropdown στο Navigation.jsx
@@ -27,7 +30,18 @@ export const NAV_ITEMS = [
   },
   { key: 'about', path: ROUTES.ABOUT, label: 'nav.about' },
   { key: 'contact', path: ROUTES.CONTACT, label: 'nav.contact' },
-  { key: 'calendar', path: ROUTES.CALENDAR, label: 'nav.calendar' }
+  { key: 'calendar', path: ROUTES.CALENDAR, label: 'nav.calendar' },
+  {
+    // 'path: null' = ομάδα χωρίς δική της σελίδα (μόνο dropdown)
+    key: 'more',
+    path: null,
+    label: 'nav.more',
+    children: [
+      { key: 'work', path: ROUTES.WORK, label: 'nav.work' },
+      { key: 'exercises', path: ROUTES.EXERCISES, label: 'nav.exercises' },
+      { key: 'play', path: ROUTES.PLAY, label: 'nav.play' },
+    ],
+  }
 ];
 
 // External links

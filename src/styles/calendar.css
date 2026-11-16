@@ -337,3 +337,149 @@
 .rbc-time-content::-webkit-scrollbar-track { background: transparent; }
 .rbc-time-content::-webkit-scrollbar-thumb,
 .rbc-time-content::-webkit-scrollbar-thumb:hover { background: var(--color-border); }
+
+/* ════════════════════════════════════════════════════════════════════
+   Κάρτα ημερολογίου, toolbar, κατάσταση συγχρονισμού, κινητό
+   ════════════════════════════════════════════════════════════════════ */
+.cal-section { max-width: 1240px; margin: 0 auto; padding: 2.5rem 1.5rem 3rem; }
+.cal-card {
+  background: var(--surface-solid);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px -30px rgba(0, 0, 0, 0.35);
+}
+.cal-card__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  padding: 0.9rem 1.25rem;
+  background: var(--color-teal);
+  color: var(--color-on-accent);
+}
+.cal-card__head h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  font-family: var(--font-body) !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  font-size: 1.05rem;
+  color: inherit;
+  text-shadow: none;
+}
+.cal-card__tz { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; opacity: 0.8; margin-left: auto; }
+.cal-card__book {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid currentColor;
+  border-radius: 9999px;
+  background: transparent;
+  color: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.cal-card__book:hover { background: rgba(255, 255, 255, 0.16); }
+.cal-card__body { padding: 1.25rem; }
+
+.cal-sync {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0.7rem 1.25rem;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  background: var(--color-teal-pale);
+  border-bottom: 1px solid var(--color-border);
+}
+.cal-sync--retrying { background: rgba(212, 168, 83, 0.18); }
+.cal-sync__spin { animation: calSpin 1s linear infinite; flex-shrink: 0; }
+@keyframes calSpin { to { transform: rotate(360deg); } }
+.cal-sync button {
+  margin-left: auto;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--color-text-muted);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cal-toolbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.cal-toolbar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem;
+  padding: 0 0.8rem;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.cal-toolbar button:hover { background: var(--color-teal-pale); }
+.cal-toolbar__nav { display: flex; gap: 0.35rem; }
+.cal-toolbar__nav button { border-radius: 9999px; min-width: 2.25rem; padding: 0 0.5rem; }
+.cal-toolbar__nav .cal-toolbar__today { padding: 0 0.9rem; }
+.cal-toolbar__label { text-align: center; font-weight: 600; font-size: 1rem; color: var(--color-text); }
+.cal-toolbar__views { display: flex; }
+.cal-toolbar__views button { margin-left: -1px; }
+.cal-toolbar__views button:first-child { border-radius: 9999px 0 0 9999px; margin-left: 0; }
+.cal-toolbar__views button:last-child { border-radius: 0 9999px 9999px 0; }
+.cal-toolbar__views button.is-active { background: var(--color-teal); border-color: var(--color-teal); color: var(--color-on-accent); position: relative; }
+
+/* ── Κινητό: το ημερολόγιο πιάνει σχεδόν όλη την οθόνη, όπως στο Google Calendar ── */
+@media (max-width: 767px) {
+  .cal-section { padding: 1rem 0 2rem; }
+  .cal-card { border-radius: 0; border-left: 0; border-right: 0; box-shadow: none; }
+  .cal-card__head { padding: 0.7rem 0.9rem; }
+  .cal-card__head h2 { font-size: 0.95rem; }
+  .cal-card__tz { display: none; }
+  .cal-card__book { margin-left: auto; }
+  .cal-card__body { padding: 0.6rem 0.25rem 0.25rem; }
+  .cal-sync { padding: 0.6rem 0.9rem; font-size: 0.8rem; }
+
+  .cal-toolbar { grid-template-columns: auto 1fr; gap: 0.5rem; padding: 0 0.5rem; margin-bottom: 0.6rem; }
+  .cal-toolbar__label { text-align: right; font-size: 0.92rem; }
+  .cal-toolbar__views { grid-column: 1 / -1; }
+  .cal-toolbar__views button { flex: 1; }
+
+  .rbc-header { padding: 8px 2px; font-size: 11px; letter-spacing: 0; }
+  .rbc-time-gutter .rbc-label, .rbc-time-header-gutter { font-size: 10px; padding: 0 3px; }
+  .rbc-time-slot { min-height: 44px; }
+  .rbc-event { padding: 2px 4px !important; }
+  .rbc-event-label { font-size: 9px; }
+  .rbc-event-content { font-size: 11px; line-height: 1.2; }
+  .rbc-date-cell { font-size: 12px; padding: 2px 4px; }
+  .rbc-month-view .rbc-event-content { font-size: 10px; }
+  .rbc-row-segment { padding: 0 1px; }
+  .rbc-time-view, .rbc-month-view { border-left: 0; border-right: 0; }
+}
+
+/* Η γραμμή "ολοήμερων" γεγονότων δεν χρησιμοποιείται: την κρύβουμε για να κερδίσει ύψος το πρόγραμμα */
+.rbc-time-view .rbc-allday-cell { display: none; }
+.rbc-time-view .rbc-time-header-content > .rbc-row.rbc-time-header-cell { min-height: 0; }
+
+@media (max-width: 767px) {
+  .cal-card__head { flex-wrap: nowrap; }
+  .cal-card__head h2 { flex: 1; min-width: 0; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cal-card__head h2 svg { flex-shrink: 0; }
+  .cal-card__book { flex-shrink: 0; padding: 0.4rem 0.75rem; font-size: 0.76rem; }
+}

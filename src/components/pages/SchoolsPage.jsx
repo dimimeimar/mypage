@@ -18,7 +18,7 @@ const SchoolsPage = () => {
       <SEO page="schools" />
 
       {/* ── HERO ── */}
-      <PageHero eyebrow={d.hero.eyebrow} title={d.hero.title} subtitle={d.hero.subtitle} />
+      <PageHero art="steps" eyebrow={d.hero.eyebrow} title={d.hero.title} subtitle={d.hero.subtitle} />
 
       {/* ── INTRO ── */}
       <section style={{ padding: '4.5rem 0 1rem' }}>

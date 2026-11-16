@@ -27,3 +27,11 @@ If you are developing a production application, we recommend using TypeScript wi
 - `common/PageHero.jsx`, `common/CtaBand.jsx`, `common/StatsBand.jsx` - κοινά για όλες τις σελίδες.
 
 Σέβεται το `prefers-reduced-motion`.
+
+### Νοέμβριος 2026 - δεύτερος γύρος
+
+- **Ημερολόγιο** (`pages/CalendarPage.jsx`): αν το Google Calendar ή το Firestore δεν απαντήσει, ξαναδοκιμάζει αυτόματα (1s, 2s, 4s, 8s και μετά ανά 15s) μέχρι να φορτώσουν και τα δύο. Μέχρι τότε δείχνει μπάρα κατάστασης και δεν επιτρέπει κρατήσεις. Το τελευταίο επιτυχημένο πρόγραμμα κρατιέται στο localStorage (12 ώρες) για άμεση εμφάνιση. Νέο toolbar, πλήρες πλάτος σε κινητό, κουμπί "Νέα κράτηση".
+- **Μενού "Περισσότερα"**: `/work` (`data/work_data.js`), `/exercises` (`data/exercises_data.js`), `/play` (coming soon).
+- **`fx/HeroArt.jsx`**: γραμμικό SVG σχέδιο στα hero των εσωτερικών σελίδων (`<PageHero art="plot|steps|path|circuit|network" />`).
+- **Ταχύτητα**: το Firebase φορτώνει πλέον μόνο όπου χρειάζεται (`src/firestore.js` για τη βάση, analytics μετά το πρώτο paint). Το αρχικό JavaScript έπεσε από ~695 kB σε ~318 kB.
+- **Αλλαγή σελίδας**: χωρίς κενή οθόνη ενδιάμεσα (οι σελίδες προφορτώνονται στο παρασκήνιο).

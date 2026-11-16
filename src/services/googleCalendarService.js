@@ -16,10 +16,13 @@ const callAppsScriptJSONP = (action, params = {}) => {
     script.src = `${APPS_SCRIPT_URL}?${queryParams}`;
     script.id = callbackName;
 
+    // Το Apps Script μερικές φορές "ξυπνάει" αργά (cold start) - του δίνουμε 20s
     const timeout = setTimeout(() => {
       cleanup();
+      // Αν η απάντηση έρθει μετά το timeout, να μη σκάσει σφάλμα "is not a function"
+      window[callbackName] = () => { delete window[callbackName]; };
       resolve({ success: false, error: 'timeout' });
-    }, 10000);
+    }, 20000);
 
     const cleanup = () => {
       clearTimeout(timeout);
@@ -69,6 +72,21 @@ const callAppsScriptPOST = async (action, payload = {}) => {
 };
 
 // ==================== CALENDAR OPERATIONS ====================
+
+// Επιστρέφει { ok, events }. Σε αντίθεση με το getGoogleCalendarEvents, ΔΕΝ κρύβει την αποτυχία:
+// ο καλών ξέρει αν το πρόγραμμα φορτώθηκε πραγματικά ή αν πρέπει να ξαναδοκιμάσει.
+export const fetchGoogleCalendarEvents = async () => {
+  if (!APPS_SCRIPT_URL) return { ok: false, events: [], error: 'missing VITE_APPS_SCRIPT_URL' };
+  try {
+    const result = await callAppsScriptJSONP('getEvents');
+    if (!result || !result.success || !Array.isArray(result.events)) {
+      return { ok: false, events: [], error: result?.error || 'bad response' };
+    }
+    return { ok: true, events: result.events };
+  } catch (error) {
+    return { ok: false, events: [], error: String(error) };
+  }
+};
 
 export const getGoogleCalendarEvents = async () => {
   try {

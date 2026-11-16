@@ -1163,3 +1163,134 @@ main div[style*="gap: 0.6rem"][style*="grid-template-columns"] > div {
 .leaflet-marker-pane { z-index: 4; }
 .leaflet-popup-pane { z-index: 5; }
 [data-theme="matrix"] .leaflet-tile-pane { filter: invert(1) grayscale(1) sepia(1) hue-rotate(70deg) saturate(3) brightness(0.8); }
+
+/* ════════════════════════════════════════════════════════════════════
+   HERO ART: γραμμικό σχέδιο στα hero των εσωτερικών σελίδων
+   ════════════════════════════════════════════════════════════════════ */
+.hero-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.hero-art path {
+  fill: none;
+  stroke: var(--color-text-muted);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.4;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: artDraw 1.4s ease-out forwards;
+}
+.hero-art path.is-accent { stroke: var(--color-teal); opacity: 0.9; stroke-width: 2; }
+.hero-art path.is-dot { stroke: var(--color-teal); stroke-width: 8; stroke-dasharray: none; stroke-dashoffset: 0; opacity: 0; animation: fadeIn 0.5s ease-out forwards; }
+@keyframes artDraw { to { stroke-dashoffset: 0; } }
+/* σε στενές οθόνες το σχέδιο θα έπεφτε πίσω από το κείμενο: το αφήνουμε πολύ αχνό */
+@media (max-width: 1000px) {
+  .hero-art { opacity: 0.35; }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   ΤΑ ΕΡΓΑ ΜΟΥ / ΑΣΚΗΣΕΙΣ / ΠΑΙΧΝΙΔΙΑ
+   ════════════════════════════════════════════════════════════════════ */
+.work-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+.work-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: border-color 0.2s ease;
+}
+.band--alt .work-card { background: var(--color-bg); }
+.work-card--link:hover { border-color: var(--color-teal); }
+.work-card__top { display: flex; align-items: center; justify-content: space-between; color: var(--color-text-muted); margin-bottom: 1.25rem; }
+.work-card--link:hover .work-card__top svg { color: var(--color-teal); }
+.work-card__status { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.74rem; font-weight: 600; }
+.work-card__status::before { content: ''; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #3f9b63; }
+.work-card__status--wip::before { background: #d4a017; }
+.work-card__name { font-size: 1.6rem; margin: 0 0 0.6rem; overflow-wrap: anywhere; }
+.work-card__desc { font-size: 0.92rem; line-height: 1.65; color: var(--color-text-muted); margin: 0; }
+.work-card__tech { display: flex; flex-wrap: wrap; gap: 0.4rem; list-style: none; padding: 1.25rem 0 0; margin: auto 0 0; }
+.work-card__tech li { font-family: var(--font-mono); font-size: 0.7rem; padding: 0.2rem 0.55rem; border: 1px solid var(--color-border); border-radius: 9999px; color: var(--color-text-muted); }
+
+.soon { max-width: 34rem; margin: 0 auto; text-align: center; color: var(--color-teal); }
+.soon h2 { font-size: clamp(2rem, 4vw, 2.8rem); margin: 1rem 0 0.75rem; }
+.soon p { color: var(--color-text-muted); line-height: 1.7; margin: 0 0 2rem; }
+
+.ex-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 2rem 0 1.5rem; }
+.ex-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+.ex-tabs button span { font-family: var(--font-mono); font-size: 0.74rem; opacity: 0.7; }
+.ex-tabs button:hover { color: var(--color-text); }
+.ex-tabs button.is-active { border-color: var(--color-teal); color: var(--color-text); background: var(--color-teal-pale); }
+
+.ex-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; align-items: start; }
+@media (max-width: 900px) { .ex-grid { grid-template-columns: 1fr; } }
+.ex-file { font-size: 0.78rem; color: var(--cw-muted); }
+.ex-code { list-style: none; counter-reset: line; margin: 0; padding: 1rem 0; font-size: 0.88rem; line-height: 1.9; overflow-x: auto; }
+.ex-code li { counter-increment: line; display: flex; padding: 0 1.25rem 0 0; border-left: 3px solid transparent; white-space: pre; }
+.ex-code li::before { content: counter(line); width: 2.6rem; padding-right: 1rem; text-align: right; color: var(--cw-muted); flex-shrink: 0; }
+.ex-code li.is-active { background: rgba(255, 255, 255, 0.09); border-left-color: var(--cw-accent); }
+.ex-code code { font-family: inherit; }
+
+.ex-answer { margin-top: 1.25rem; }
+.ex-answer label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--color-text-muted); margin-bottom: 0.4rem; }
+.ex-answer__row { display: flex; gap: 0.6rem; max-width: 26rem; }
+.ex-answer__row .form-input { font-family: var(--font-mono); }
+.ex-answer__row button { flex-shrink: 0; }
+.ex-feedback { display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem; margin: 0.9rem 0 0; font-size: 0.9rem; font-weight: 500; }
+.ex-feedback--correct { color: #2f8a55; }
+.ex-feedback--wrong { color: #c2410c; }
+.ex-feedback strong { font-family: var(--font-mono); font-weight: 500; color: var(--color-text); }
+[data-theme="matrix"] .ex-feedback--correct { color: var(--color-teal); }
+[data-theme="matrix"] .ex-feedback--wrong { color: #ff8a5c; }
+
+.ex-trace { padding: 1.5rem; border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-surface); min-height: 16rem; }
+.ex-trace h3 { font-size: 1.4rem; margin: 0 0 1rem; }
+.ex-locked { color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.6; margin: 0; }
+.ex-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+.ex-controls .btn-primary, .ex-controls .btn-outline { padding: 0.55rem 1rem; font-size: 0.7rem; }
+.ex-controls button:disabled { opacity: 0.4; cursor: default; }
+.ex-reset { display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border: 1px solid var(--color-border); border-radius: 50%; background: transparent; color: var(--color-text-muted); cursor: pointer; }
+.ex-count { margin-left: auto; font-size: 0.8rem; color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+.ex-table-wrap { overflow-x: auto; max-height: 22rem; overflow-y: auto; }
+.ex-table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.84rem; }
+.ex-table th, .ex-table td { padding: 0.4rem 0.7rem; text-align: right; border-bottom: 1px solid var(--color-border); white-space: nowrap; }
+.ex-table th { position: sticky; top: 0; background: var(--surface-solid); color: var(--color-text-muted); font-weight: 500; }
+.ex-table th:first-child, .ex-table td:first-child { text-align: left; color: var(--color-text-muted); }
+.ex-table tr.is-current td { background: var(--color-teal-pale); color: var(--color-text); }
+
+.ex-binary { margin-top: 2rem; max-width: 34rem; }
+.ex-binary__q { font-family: var(--font-display); font-style: var(--heading-style); font-size: 1.6rem; line-height: 1.3; margin: 0 0 1.25rem; color: var(--color-text); }
+.ex-streak { margin: 1.5rem 0 0; font-size: 0.85rem; color: var(--color-text-muted); }
+.ex-streak strong { color: var(--color-text); font-variant-numeric: tabular-nums; }
+
+/* Κινητό: το χαμηλό hero (π.χ. Ημερολόγιο) μικραίνει κι άλλο ώστε το περιεχόμενο να φαίνεται αμέσως */
+@media (max-width: 767px) {
+  .page-hero { padding: 8rem 0 4rem; }
+  .page-hero--compact { padding: 5.75rem 0 1.5rem; }
+  .page-hero--compact .page-hero__sub { font-size: 0.9rem; }
+  .page-hero--compact .page-hero__rule { display: none; }
+  .band { padding: 4rem 0; }
+  .theme-switch { right: 0.75rem; bottom: 0.75rem; }
+  .theme-switch__btn { height: 2.5rem; }
+}

@@ -45,6 +45,13 @@ export const calendarData = {
       overlapSubmit: 'Αυτή η ώρα έχει ήδη κλειστεί. Παρακαλώ επιλέξτε άλλη.',
       genericError: 'Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξανά.'
     },
+    sync: {
+      loading: 'Φόρτωση προγράμματος...',
+      retrying: 'Το πρόγραμμα δεν φόρτωσε πλήρως. Γίνεται νέα προσπάθεια...',
+      retryButton: 'Δοκιμή τώρα',
+      blocked: 'Το πρόγραμμα φορτώνει ακόμα. Δοκιμάστε ξανά σε λίγα δευτερόλεπτα.'
+    },
+    bookButton: 'Νέα κράτηση',
     emailNotesFallback: 'Καμία',
     booking: {
       dateLocale: 'el-GR',
@@ -124,6 +131,13 @@ export const calendarData = {
       overlapSubmit: 'This time slot has already been booked. Please choose another.',
       genericError: 'Something went wrong. Please try again.'
     },
+    sync: {
+      loading: 'Loading schedule...',
+      retrying: 'The schedule did not load fully. Trying again...',
+      retryButton: 'Retry now',
+      blocked: 'The schedule is still loading. Please try again in a few seconds.'
+    },
+    bookButton: 'New booking',
     emailNotesFallback: 'None',
     booking: {
       dateLocale: 'en-US',
