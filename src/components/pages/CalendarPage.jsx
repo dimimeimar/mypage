@@ -94,6 +94,9 @@ const CalendarPage = () => {
     const [localEvents, setLocalEvents] = useState([]);
     // loading: πρώτη προσπάθεια, retrying: απέτυχε και ξαναδοκιμάζει, ok: όλα φορτώθηκαν
     const [sync, setSync] = useState('loading');
+    // Γίνεται true στο πρώτο πλήρες φόρτωμα. Μέχρι τότε το πλέγμα καλύπτεται, ώστε κανείς
+    // να μη δει ένα "άδειο" ημερολόγιο και νομίσει ότι όλες οι ώρες είναι ελεύθερες.
+    const [hasSynced, setHasSynced] = useState(false);
     const [reloadKey, setReloadKey] = useState(0);
 
     const [selectedSlot, setSelectedSlot] = useState(null);
@@ -140,6 +143,7 @@ const CalendarPage = () => {
                 lastOk = Date.now();
                 attempt = 0;
                 setSync('ok');
+                setHasSynced(true);
                 return;
             }
             setSync('retrying');
@@ -347,8 +351,8 @@ const CalendarPage = () => {
                         </button>
                     </div>
 
-                    {/* Κατάσταση φόρτωσης: φαίνεται μέχρι να φορτώσουν ΟΛΑ τα δεδομένα */}
-                    {sync !== 'ok' && (
+                    {/* Μπάρα κατάστασης: όταν μια προσπάθεια αποτύχει, ή σε ανανέωση μετά το πρώτο φόρτωμα */}
+                    {sync !== 'ok' && (hasSynced || sync === 'retrying') && (
                         <div className={`cal-sync cal-sync--${sync}`} role="status">
                             <RefreshCw size={15} className="cal-sync__spin" />
                             <span>{sync === 'loading' ? t.sync.loading : t.sync.retrying}</span>
@@ -358,7 +362,13 @@ const CalendarPage = () => {
                         </div>
                     )}
 
-                    <div className="cal-card__body">
+                    <div className="cal-card__body" aria-busy={!hasSynced}>
+                        {!hasSynced && (
+                            <div className="cal-loading" role="status">
+                                <RefreshCw size={26} className="cal-sync__spin" />
+                                <p>{t.sync.loading}</p>
+                            </div>
+                        )}
                         <Calendar
                             localizer={localizer}
                             culture={language === 'en' ? 'en' : 'el'}

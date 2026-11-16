@@ -483,3 +483,20 @@
   .cal-card__head h2 svg { flex-shrink: 0; }
   .cal-card__book { flex-shrink: 0; padding: 0.4rem 0.75rem; font-size: 0.76rem; }
 }
+
+/* Πρώτο φόρτωμα: το πλέγμα καλύπτεται μέχρι να έρθει ολόκληρο το πρόγραμμα */
+.cal-card__body { position: relative; }
+.cal-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.9rem;
+  padding-top: 9rem;
+  background: var(--surface-solid);
+  color: var(--color-teal);
+}
+.cal-loading p { margin: 0; font-size: 0.95rem; font-weight: 500; color: var(--color-text-muted); }
