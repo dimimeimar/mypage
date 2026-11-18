@@ -43,6 +43,7 @@ export const calendarData = {
     alerts: {
       overlapSelect: 'Αυτή η ώρα είναι ήδη κλεισμένη. Παρακαλώ επιλέξτε άλλη.',
       overlapSubmit: 'Αυτή η ώρα έχει ήδη κλειστεί. Παρακαλώ επιλέξτε άλλη.',
+      pastTime: 'Αυτή η ώρα έχει ήδη περάσει. Παρακαλώ επιλέξτε μελλοντική ώρα.',
       genericError: 'Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξανά.'
     },
     sync: {
@@ -130,6 +131,7 @@ export const calendarData = {
     alerts: {
       overlapSelect: 'This time slot is already booked. Please choose another.',
       overlapSubmit: 'This time slot has already been booked. Please choose another.',
+      pastTime: 'That time has already passed. Please choose a future time.',
       genericError: 'Something went wrong. Please try again.'
     },
     sync: {

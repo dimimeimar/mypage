@@ -188,6 +188,10 @@ const CalendarPage = () => {
             alert(t.sync.blocked);
             return;
         }
+        if (slot.start <= new Date()) {
+            alert(t.alerts.pastTime);
+            return;
+        }
         if (hasOverlap(slot.start, slot.end)) {
             alert(t.alerts.overlapSelect);
             return;
@@ -211,8 +215,15 @@ const CalendarPage = () => {
         const start = new Date(currentDate);
         const now = new Date();
         const isToday = start.toDateString() === now.toDateString();
-        const hour = Math.min(Math.max(isToday ? now.getHours() + 1 : 17, DAY_START), DAY_END - 1);
+        // Σήμερα: η επόμενη ώρα. Αν η μέρα τελείωσε (ή η ημερομηνία είναι παρελθοντική), πάμε στην επόμενη μέρα στις 17:00
+        let hour = Math.min(Math.max(isToday ? now.getHours() + 1 : 17, DAY_START), DAY_END - 1);
         start.setHours(hour, 0, 0, 0);
+        if (start <= now) {
+            start.setTime(now.getTime());
+            start.setDate(start.getDate() + 1);
+            hour = 17;
+            start.setHours(hour, 0, 0, 0);
+        }
         const end = new Date(start);
         end.setHours(hour + 1);
         if (sync !== 'ok') { alert(t.sync.blocked); return; }
@@ -241,6 +252,10 @@ const CalendarPage = () => {
     // Handle booking submission
     const handleBookingSubmit = async (bookingData) => {
 
+        if (bookingData.startTime <= new Date()) {
+            alert(t.alerts.pastTime);
+            return;
+        }
         if (hasOverlap(bookingData.startTime, bookingData.endTime)) {
             alert(t.alerts.overlapSubmit);
             return;
