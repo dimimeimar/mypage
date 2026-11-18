@@ -48,7 +48,8 @@ function getEvents_(p) {
         googleEventId: ev.getId(),
         start: ev.getStartTime().toISOString(),
         end: ev.getEndTime().toISOString(),
-        isAllDay: ev.isAllDayEvent()
+        isAllDay: ev.isAllDayEvent(),
+        title: ev.getTitle()
       };
     })
   };

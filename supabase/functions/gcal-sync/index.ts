@@ -116,7 +116,7 @@ Deno.serve(async (req) => {
     for (const e of res.events as any[]) {
       if (e.isAllDay || ownIds.has(e.googleEventId)) continue;
       extMap.set(`${e.googleEventId}|${e.start}`, {
-        google_event_id: e.googleEventId, starts_at: e.start, ends_at: e.end, seen_at: runStamp,
+        google_event_id: e.googleEventId, starts_at: e.start, ends_at: e.end, title: e.title ?? null, seen_at: runStamp,
       });
     }
     const ext = [...extMap.values()];

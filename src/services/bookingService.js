@@ -21,6 +21,7 @@ export const fetchBusy = async (from, to) => {
       start: new Date(r.starts_at),
       end: new Date(r.ends_at),
       bookedBy: r.status === 'pending' ? 'pending_request' : 'admin',
+      label: r.title || null,
     })),
   };
 };

@@ -160,9 +160,9 @@ const CalendarPage = () => {
 
     const addLocalEvent = (ev) => setEvents((prev) => [...prev, ev]);
 
-    // Ο επισκέπτης βλέπει μόνο "Κλεισμένο" / "Σε αναμονή", ποτέ ονόματα
+    // Τίτλος από το Google / το όνομα της κράτησης· αν λείπει, "Κλεισμένο". Τα αιτήματα σε αναμονή δείχνουν μόνο "Σε αναμονή"
     const displayEvents = useMemo(
-        () => events.map((e) => ({ ...e, title: e.bookedBy === 'pending_request' ? t.eventLabels.pending : t.eventLabels.busy })),
+        () => events.map((e) => ({ ...e, title: e.bookedBy === 'pending_request' ? t.eventLabels.pending : (e.label || t.eventLabels.busy) })),
         [events, t]
     );
 
