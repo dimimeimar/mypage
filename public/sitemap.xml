@@ -112,4 +112,13 @@
     <lastmod>2026-11-16</lastmod>
   </url>
 
+
+  <!-- Πολιτική απορρήτου -->
+  <url>
+    <loc>https://meimaridistutor.com/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+    <lastmod>2026-11-19</lastmod>
+  </url>
+
 </urlset>

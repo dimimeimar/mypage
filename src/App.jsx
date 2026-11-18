@@ -25,6 +25,7 @@ const PAGES = {
   play: () => import('./components/pages/PlayPage.jsx'),
   login: () => import('./components/pages/LoginPage.jsx'),
   admin: () => import('./components/pages/AdminPage.jsx'),
+  privacy: () => import('./components/pages/PrivacyPage.jsx'),
 };
 const ServicesPage = lazy(PAGES.services);
 const SubjectsPage = lazy(PAGES.subjects);
@@ -39,6 +40,7 @@ const ExercisesPage = lazy(PAGES.exercises);
 const PlayPage = lazy(PAGES.play);
 const LoginPage = lazy(PAGES.login);
 const AdminPage = lazy(PAGES.admin);
+const PrivacyPage = lazy(PAGES.privacy);
 
 function App() {
 
@@ -86,6 +88,7 @@ function App() {
               <Route path={ROUTES.PLAY} element={<PlayPage />} />
               <Route path={ROUTES.LOGIN} element={<LoginPage />} />
               <Route path={ROUTES.ADMIN} element={<AdminPage />} />
+              <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
               {/* Redirect any unknown routes to home */}
               <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
             </Routes>

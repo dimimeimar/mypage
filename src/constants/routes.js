@@ -14,6 +14,7 @@ export const ROUTES = {
   PLAY: '/play',
   LOGIN: '/login',
   ADMIN: '/admin',
+  PRIVACY: '/privacy',
 };
 
 // Navigation items - τα 'children' δημιουργούν αυτόματα dropdown στο Navigation.jsx

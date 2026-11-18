@@ -70,7 +70,7 @@ const Footer = () => {
 
         <div className="footer__bottom">
           <p>© {year} Meimaridis Tutoring. {d.rightsReserved}</p>
-          <p>{d.locationLine} <Link to={accountPath} style={{ marginLeft: '1rem', opacity: 0.7 }}>{accountLabel}</Link></p>
+          <p>{d.locationLine} <Link to={ROUTES.PRIVACY} style={{ marginLeft: '1rem', opacity: 0.7 }}>{language === 'el' ? 'Απόρρητο' : 'Privacy'}</Link> <Link to={accountPath} style={{ marginLeft: '1rem', opacity: 0.7 }}>{accountLabel}</Link></p>
         </div>
       </div>
     </footer>

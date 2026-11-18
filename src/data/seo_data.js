@@ -1,6 +1,17 @@
 // Title / meta description ανά σελίδα, οργανωμένα ανά γλώσσα.
 // Χρησιμοποιείται από το <SEO /> component σε κάθε page component.
 export const seoData = {
+  privacy: {
+    path: '/privacy',
+    el: {
+      title: 'Πολιτική Απορρήτου | Δημήτρης Μεϊμαρίδης',
+      description: 'Ποια στοιχεία συλλέγονται από το site, γιατί και πώς μπορείτε να ζητήσετε διόρθωση ή διαγραφή τους.'
+    },
+    en: {
+      title: 'Privacy Policy | Dimitris Meimaridis',
+      description: 'What data this site collects, why, and how to ask for it to be corrected or deleted.'
+    }
+  },
   home: {
     path: '/',
     el: {
