@@ -4,6 +4,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import Layout from './components/layout/Layout.jsx';
 import HomePage from './components/pages/HomePage.jsx';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { AuthProvider } from './contexts/AuthContext';
 import { lazy, Suspense, useEffect } from 'react';
 
 import { ROUTES } from './constants/routes';
@@ -22,6 +23,8 @@ const PAGES = {
   work: () => import('./components/pages/WorkPage.jsx'),
   exercises: () => import('./components/pages/ExercisesPage.jsx'),
   play: () => import('./components/pages/PlayPage.jsx'),
+  login: () => import('./components/pages/LoginPage.jsx'),
+  admin: () => import('./components/pages/AdminPage.jsx'),
 };
 const ServicesPage = lazy(PAGES.services);
 const SubjectsPage = lazy(PAGES.subjects);
@@ -34,6 +37,8 @@ const CalendarPage = lazy(PAGES.calendar);
 const WorkPage = lazy(PAGES.work);
 const ExercisesPage = lazy(PAGES.exercises);
 const PlayPage = lazy(PAGES.play);
+const LoginPage = lazy(PAGES.login);
+const AdminPage = lazy(PAGES.admin);
 
 function App() {
 
@@ -53,7 +58,7 @@ function App() {
   // ώστε η αλλαγή σελίδας να είναι άμεση (χωρίς κενή οθόνη ενδιάμεσα).
   useEffect(() => {
     if (navigator.connection?.saveData) return undefined;
-    const id = setTimeout(() => Object.values(PAGES).forEach((load) => load().catch(() => {})), 2500);
+    const id = setTimeout(() => Object.entries(PAGES).forEach(([key, load]) => { if (key !== 'admin') load().catch(() => {}); }), 2500);
     return () => clearTimeout(id);
   }, []);
 
@@ -61,6 +66,7 @@ function App() {
     <HelmetProvider>
       <ThemeProvider>
         <LanguageProvider>
+         <AuthProvider>
           <Layout>
             <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
             <Routes>
@@ -78,11 +84,14 @@ function App() {
               <Route path={ROUTES.WORK} element={<WorkPage />} />
               <Route path={ROUTES.EXERCISES} element={<ExercisesPage />} />
               <Route path={ROUTES.PLAY} element={<PlayPage />} />
+              <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+              <Route path={ROUTES.ADMIN} element={<AdminPage />} />
               {/* Redirect any unknown routes to home */}
               <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
             </Routes>
             </Suspense>
           </Layout>
+         </AuthProvider>
         </LanguageProvider>
       </ThemeProvider>
     </HelmetProvider>

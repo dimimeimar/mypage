@@ -30,3 +30,6 @@ dist-ssr
 *.sw?
 # Local-only data (student names)
 supabase/data/
+supabase/.temp/
+history.json
+cal-history/

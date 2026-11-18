@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import { CONTACT_INFO, EXTERNAL_LINKS } from '../../constants/routes';
+import { CONTACT_INFO, EXTERNAL_LINKS, ROUTES } from '../../constants/routes';
 import { getString } from '../../data/strings';
 import { footerData, footerPlatforms } from '../../data/footer_data';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { Mail, Phone, MapPin, Github, Linkedin, Instagram } from 'lucide-react';
 
 const SOCIAL = [
@@ -15,6 +16,9 @@ const Footer = () => {
   const { language } = useLanguage();
   const year = new Date().getFullYear();
   const d = footerData[language] || footerData.el;
+  const { user, isAdmin } = useAuth();
+  const accountLabel = isAdmin ? (language === 'el' ? 'Διαχείριση' : 'Admin') : user ? (language === 'el' ? 'Λογαριασμός' : 'Account') : (language === 'el' ? 'Σύνδεση' : 'Sign in');
+  const accountPath = isAdmin ? ROUTES.ADMIN : ROUTES.LOGIN;
 
   return (
     <footer className="footer">
@@ -66,7 +70,7 @@ const Footer = () => {
 
         <div className="footer__bottom">
           <p>© {year} Meimaridis Tutoring. {d.rightsReserved}</p>
-          <p>{d.locationLine}</p>
+          <p>{d.locationLine} <Link to={accountPath} style={{ marginLeft: '1rem', opacity: 0.7 }}>{accountLabel}</Link></p>
         </div>
       </div>
     </footer>

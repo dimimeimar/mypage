@@ -54,6 +54,7 @@ export const calendarData = {
     },
     bookButton: 'Νέα κράτηση',
     eventLabels: { busy: 'Κλεισμένο', pending: 'Σε αναμονή' },
+    directBanner: 'Έχετε δικαίωμα άμεσης κράτησης: οι ώρες που κλείνετε (τουλάχιστον 48 ώρες νωρίτερα) πιάνονται αμέσως.',
     emailNotesFallback: 'Καμία',
     booking: {
       dateLocale: 'el-GR',
@@ -142,6 +143,7 @@ export const calendarData = {
     },
     bookButton: 'New booking',
     eventLabels: { busy: 'Booked', pending: 'Pending' },
+    directBanner: 'You have direct booking access: lessons you book (at least 48 hours ahead) are reserved immediately.',
     emailNotesFallback: 'None',
     booking: {
       dateLocale: 'en-US',

@@ -16,7 +16,9 @@ const BookingModal = ({
   isOpen,
   onClose,
   selectedSlot,
-  onSubmit
+  onSubmit,
+  directBooking = false,
+  prefill = null
 }) => {
   const { language } = useTranslation();
   const t = (calendarData[language] || calendarData.el).booking;
@@ -31,7 +33,9 @@ const BookingModal = ({
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isVerifiedUser, setIsVerifiedUser] = useState(false);
+
+  // Άμεση κράτηση: μόνο για συνδεδεμένο μαθητή με δικαίωμα, και τουλάχιστον 48 ώρες νωρίτερα
+  const isVerifiedUser = !!directBooking && !!formData.startTime && formData.startTime.getTime() >= Date.now() + 48 * 3600 * 1000;
 
   const debounceRef = useRef(null);
 
@@ -76,10 +80,12 @@ const BookingModal = ({
       setFormData(prev => ({
         ...prev,
         startTime: selectedSlot.start,
-        endTime: selectedSlot.end
+        endTime: selectedSlot.end,
+        studentEmail: prev.studentEmail || prefill?.email || '',
+        title: prev.title || prefill?.name || ''
       }));
     }
-  }, [selectedSlot]);
+  }, [selectedSlot, prefill]);
 
   if (!isOpen || !selectedSlot) return null;
 
@@ -113,7 +119,6 @@ const BookingModal = ({
   // Αλλαγή email (η άμεση κράτηση για whitelisted γίνεται με login, όχι με email)
   const handleEmailChange = (email) => {
     setFormData(prev => ({ ...prev, studentEmail: email }));
-    setIsVerifiedUser(false);
 
     if (errors.studentEmail) {
       setErrors(prev => ({ ...prev, studentEmail: null }));

@@ -1,0 +1,68 @@
+/* Σύνδεση και διαχείριση */
+.auth-card {
+  max-width: 34rem; margin: 0 auto; padding: 2rem;
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius);
+  display: flex; flex-direction: column; gap: 1.25rem; align-items: flex-start;
+}
+.auth-card p { margin: 0; color: var(--color-text-muted); line-height: 1.6; }
+.auth-card__who { color: var(--color-text); }
+.auth-card__row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.auth-card__err { color: #b3261e; }
+
+.adm-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.adm-muted { color: var(--color-text-muted); font-size: 0.9rem; }
+.adm-h { margin: 2rem 0 0.75rem; font-size: 1.05rem; font-family: var(--font-body); font-weight: 700; color: var(--color-text); }
+
+.adm-tabs { display: flex; gap: 0.25rem; flex-wrap: wrap; border-bottom: 1px solid var(--color-border); margin-bottom: 1.5rem; }
+.adm-tabs button {
+  padding: 0.7rem 1rem; background: none; border: 0; border-bottom: 2px solid transparent;
+  color: var(--color-text-muted); font: 600 0.9rem var(--font-body); cursor: pointer;
+}
+.adm-tabs button.is-active { color: var(--color-text); border-bottom-color: var(--color-teal); }
+
+.adm-toast { padding: 0.8rem 1rem; border-radius: var(--radius); margin-bottom: 1.25rem; font-size: 0.92rem; border: 1px solid var(--color-border); background: var(--color-teal-pale); color: var(--color-text); }
+.adm-toast--err { background: #fdecea; color: #7a1b14; border-color: #f2b8b5; }
+.adm-toast--warn { background: #fff4e0; color: #6b4300; border-color: #f0d49a; }
+
+.adm-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.adm-list--compact { gap: 0.25rem; margin-bottom: 1rem; }
+.adm-item {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+  padding: 1rem 1.1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius);
+}
+.adm-list--compact .adm-item { padding: 0.45rem 0.8rem; font-size: 0.9rem; }
+.adm-item__main { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+.adm-item__actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.adm-badge {
+  align-self: flex-start; padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;
+  background: var(--color-teal-pale); color: var(--color-teal); border: 1px solid var(--color-border);
+}
+.adm-badge--direct { background: #fff4e0; color: #6b4300; border-color: #f0d49a; }
+
+.adm-form { display: flex; flex-direction: column; gap: 1rem; max-width: 30rem; }
+.adm-form--inline { max-width: none; flex-direction: row; flex-wrap: wrap; align-items: flex-end; margin-bottom: 1.5rem; }
+.adm-form label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.85rem; font-weight: 600; color: var(--color-text-muted); }
+.adm-form input, .adm-form select {
+  padding: 0.65rem 0.8rem; border: 1px solid var(--color-border); border-radius: var(--radius);
+  background: var(--field-bg); color: var(--field-fg); font: 400 0.95rem var(--font-body); min-width: 12rem;
+}
+
+.adm-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 0.75rem; }
+.adm-card { padding: 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); display: flex; flex-direction: column; gap: 0.2rem; }
+.adm-card b { font-size: 1.7rem; font-family: var(--font-display); color: var(--color-text); }
+.adm-card span { font-size: 0.8rem; color: var(--color-text-muted); }
+
+.adm-bars { display: flex; align-items: flex-end; gap: 0.35rem; height: 11rem; padding-bottom: 1.5rem; overflow-x: auto; }
+.adm-bar { position: relative; flex: 1 0 1.6rem; height: 100%; display: flex; align-items: flex-end; }
+.adm-bar__fill { width: 100%; background: var(--color-teal); border-radius: 2px 2px 0 0; min-height: 2px; }
+.adm-bar__label { position: absolute; left: 0; right: 0; bottom: -1.4rem; text-align: center; font-size: 0.68rem; color: var(--color-text-muted); white-space: nowrap; }
+
+@media (max-width: 640px) {
+  .adm-form--inline { flex-direction: column; align-items: stretch; }
+  .adm-form input, .adm-form select { min-width: 0; width: 100%; }
+}
+
+/* Τα κουμπιά εδώ δεν γράφονται με κεφαλαία (τα ελληνικά κεφαλαία με τόνους δείχνουν λάθος) */
+.adm-item__actions button, .adm-top button, .adm-form button, .auth-card button, .auth-card a {
+  text-transform: none; letter-spacing: 0.02em; font-size: 0.92rem;
+}

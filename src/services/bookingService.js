@@ -25,11 +25,16 @@ export const fetchBusy = async (from, to) => {
   };
 };
 
-/** Αίτημα κράτησης από επισκέπτη (δεν χρειάζεται login). Μένει "pending" μέχρι να το εγκρίνω. */
-export const createBookingRequest = async ({ title, studentEmail, startTime, endTime, notes }) => {
+/**
+ * Κράτηση. Χωρίς login: αίτημα "pending" (δεν πιάνει την ώρα μέχρι να το εγκρίνω).
+ * Με direct=true (μόνο για whitelisted συνδεδεμένο χρήστη): "booked", πιάνει αμέσως την ώρα και
+ * περιμένει την αποδοχή μου για να περάσει στο Google Calendar. Η βάση ελέγχει όλους τους κανόνες.
+ */
+export const createBookingRequest = async ({ title, studentEmail, startTime, endTime, notes, userId, direct }) => {
   const { error } = await supabase.from('lessons').insert({
     kind: 'lesson',
-    status: 'pending',
+    status: direct ? 'booked' : 'pending',
+    user_id: userId || null,
     student_name: title,
     student_email: studentEmail.toLowerCase(),
     notes: notes || null,

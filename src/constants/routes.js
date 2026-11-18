@@ -12,6 +12,8 @@ export const ROUTES = {
   WORK: '/work',
   EXERCISES: '/exercises',
   PLAY: '/play',
+  LOGIN: '/login',
+  ADMIN: '/admin',
 };
 
 // Navigation items - τα 'children' δημιουργούν αυτόματα dropdown στο Navigation.jsx

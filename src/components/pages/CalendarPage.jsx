@@ -25,6 +25,7 @@ import { fetchBusy, createBookingRequest } from '../../services/bookingService';
 import { useTranslation } from '../../hooks/useTranslation';
 import { calendarData, STATUS_COLORS } from '../../data/calendar_data';
 import PageHero from '../common/PageHero';
+import { useAuth } from '../../contexts/AuthContext';
 
 moment.updateLocale('el', { week: { dow: 1 } }); // Δευτέρα πρώτη
 const localizer = momentLocalizer(moment);
@@ -79,6 +80,8 @@ const CalToolbar = ({ label, onNavigate, onView, view, views, localizer: { messa
 const CalendarPage = () => {
     const { language } = useTranslation();
     const t = calendarData[language] || calendarData.el;
+    const { user, profile, canBookDirect } = useAuth();
+    const prefill = useMemo(() => (user ? { email: user.email, name: profile?.full_name || '' } : null), [user, profile]);
 
     // Μία πηγή: η βάση (Supabase). Δείχνει μόνο ώρες, όχι ονόματα.
     const [events, setEvents] = useState(() => readCache() || []);
@@ -261,8 +264,13 @@ const CalendarPage = () => {
             return;
         }
         try {
-            const result = await createBookingRequest(bookingData);
-            if (!result.success) throw new Error('Failed to create booking request');
+            // Άμεση κράτηση μόνο αν ο χρήστης είναι συνδεδεμένος, έχει δικαίωμα και η ώρα είναι ≥48 ώρες μπροστά
+            const direct = canBookDirect && !!user && bookingData.startTime.getTime() >= Date.now() + 48 * 3600 * 1000;
+            const result = await createBookingRequest({ ...bookingData, userId: user?.id, direct });
+            if (!result.success) {
+                if (result.error?.code === '23P01') { alert(t.alerts.overlapSubmit); return; }
+                throw new Error('Failed to create booking request');
+            }
 
             // Ειδοποίηση με email (προσωρινά, μέχρι να έρθουν οι ειδοποιήσεις από το admin)
             emailjs.send(
@@ -273,7 +281,7 @@ const CalendarPage = () => {
                     student_email: bookingData.studentEmail,
                     date: bookingData.startTime.toLocaleDateString(t.booking.dateLocale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
                     time: `${bookingData.startTime.toLocaleTimeString(t.booking.dateLocale, { hour: '2-digit', minute: '2-digit' })} - ${bookingData.endTime.toLocaleTimeString(t.booking.dateLocale, { hour: '2-digit', minute: '2-digit' })}`,
-                    notes: bookingData.notes || t.emailNotesFallback
+                    notes: `${direct ? '[ΑΜΕΣΗ ΚΡΑΤΗΣΗ] ' : ''}${bookingData.notes || t.emailNotesFallback}`
                 },
                 import.meta.env.VITE_EMAILJS_PUBLIC_KEY
             );
@@ -282,7 +290,7 @@ const CalendarPage = () => {
                 id: `pending-${Date.now()}`,
                 start: bookingData.startTime,
                 end: bookingData.endTime,
-                bookedBy: 'pending_request'
+                bookedBy: direct ? 'verified_user' : 'pending_request'
             });
         } catch (error) {
             console.error('Booking error:', error);
@@ -306,6 +314,8 @@ const CalendarPage = () => {
                             <Plus size={16} /> {t.bookButton}
                         </button>
                     </div>
+
+                    {canBookDirect && <p className="cal-direct">{t.directBanner}</p>}
 
                     {/* Μπάρα κατάστασης: όταν μια προσπάθεια αποτύχει, ή σε ανανέωση μετά το πρώτο φόρτωμα */}
                     {sync !== 'ok' && (hasSynced || sync === 'retrying') && (
@@ -402,6 +412,8 @@ const CalendarPage = () => {
 
             {/* Booking Modal */}
             <BookingModal
+                directBooking={canBookDirect}
+                prefill={prefill}
                 isOpen={showBookingModal}
                 onClose={() => setShowBookingModal(false)}
                 selectedSlot={selectedSlot}
