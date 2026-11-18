@@ -4,11 +4,6 @@ import moment from 'moment';
 // Το 'moment/dist/locale/el' (και όχι 'moment/locale/el') ώστε τα ελληνικά να φορτώνουν στο ίδιο
 // αντίγραφο του moment που χρησιμοποιεί το Vite - αλλιώς μέρες και μήνες βγαίνουν στα αγγλικά.
 import 'moment/dist/locale/el';
-import {
-    createGoogleCalendarEvent,
-    fetchGoogleCalendarEvents,
-    convertGoogleEventToAppEvent
-} from '../../services/googleCalendarService';
 import emailjs from '@emailjs/browser';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../../styles/calendar.css';
@@ -26,11 +21,7 @@ import {
     RefreshCw
 } from 'lucide-react';
 import BookingModal from '../common/BookingModal';
-import {
-    fetchAllEvents,
-    createBookingRequest,
-    isEmailAuthorized
-} from '../../services/calendarService';
+import { fetchBusy, createBookingRequest } from '../../services/bookingService';
 import { useTranslation } from '../../hooks/useTranslation';
 import { calendarData, STATUS_COLORS } from '../../data/calendar_data';
 import PageHero from '../common/PageHero';
@@ -44,15 +35,17 @@ const MOBILE_QUERY = '(max-width: 767px)';
 const DAY_START = 8;   // πρώτη ώρα που δείχνει το ημερολόγιο
 const DAY_END = 22;    // τελευταία
 
-/* ── Προσωρινή αποθήκευση του προγράμματος Google ──
+/* ── Προσωρινή αποθήκευση του προγράμματος ──
    Κρατάμε το τελευταίο επιτυχημένο φόρτωμα στον browser. Έτσι το ημερολόγιο γεμίζει
    αμέσως στην επόμενη επίσκεψη, ενώ στο παρασκήνιο φορτώνει η φρέσκια εκδοχή. */
-const CACHE_KEY = 'gcal-events-v1';
+const CACHE_KEY = 'busy-v1';
 const CACHE_MAX_AGE = 12 * 60 * 60 * 1000; // 12 ώρες
 const readCache = () => {
     try {
         const raw = JSON.parse(localStorage.getItem(CACHE_KEY));
-        if (raw && Date.now() - raw.t < CACHE_MAX_AGE && Array.isArray(raw.events)) return raw.events;
+        if (raw && Date.now() - raw.t < CACHE_MAX_AGE && Array.isArray(raw.events)) {
+            return raw.events.map((e) => ({ ...e, start: new Date(e.start), end: new Date(e.end) }));
+        }
     } catch { /* άδειο ή μη διαθέσιμο localStorage */ }
     return null;
 };
@@ -87,11 +80,8 @@ const CalendarPage = () => {
     const { language } = useTranslation();
     const t = calendarData[language] || calendarData.el;
 
-    // Τρεις πηγές: Firestore (αιτήματα/κρατήσεις), Google Calendar (το πρόγραμμά μου),
-    // και όσα πρόσθεσε ο χρήστης σε αυτή την επίσκεψη.
-    const [firestoreEvents, setFirestoreEvents] = useState([]);
-    const [googleRaw, setGoogleRaw] = useState(() => readCache() || []);
-    const [localEvents, setLocalEvents] = useState([]);
+    // Μία πηγή: η βάση (Supabase). Δείχνει μόνο ώρες, όχι ονόματα.
+    const [events, setEvents] = useState(() => readCache() || []);
     // loading: πρώτη προσπάθεια, retrying: απέτυχε και ξαναδοκιμάζει, ok: όλα φορτώθηκαν
     const [sync, setSync] = useState('loading');
     // Γίνεται true στο πρώτο πλήρες φόρτωμα. Μέχρι τότε το πλέγμα καλύπτεται, ώστε κανείς
@@ -119,27 +109,23 @@ const CalendarPage = () => {
     }, [language]);
 
     /* ── Φόρτωση με δικλείδα ασφαλείας ──
-       Αν το Google Calendar (ή το Firestore) δεν απαντήσει, ΔΕΝ δείχνουμε μισό ημερολόγιο
-       σαν να είναι σωστό: ξαναδοκιμάζουμε αυτόματα μέχρι να φορτώσουν και τα δύο. */
+       Αν η βάση δεν απαντήσει, ΔΕΝ δείχνουμε μισό ημερολόγιο σαν να είναι σωστό:
+       ξαναδοκιμάζουμε αυτόματα μέχρι να φορτώσει. */
     useEffect(() => {
         let cancelled = false;
         let timer = 0;
         let attempt = 0;
         let lastOk = 0;
-        let gotFirestore = false;
-        let gotGoogle = false;
 
         const run = async () => {
-            const [fs, g] = await Promise.all([
-                gotFirestore ? null : fetchAllEvents(),
-                gotGoogle ? null : fetchGoogleCalendarEvents(),
-            ]);
+            const from = new Date(); from.setHours(0, 0, 0, 0); from.setDate(from.getDate() - 14);
+            const to = new Date(from); to.setDate(to.getDate() + 14 + 270);
+            const res = await fetchBusy(from, to);
             if (cancelled) return;
 
-            if (fs?.ok) { gotFirestore = true; setFirestoreEvents(fs.events); setLocalEvents([]); }
-            if (g?.ok) { gotGoogle = true; setGoogleRaw(g.events); writeCache(g.events); }
-
-            if (gotFirestore && gotGoogle) {
+            if (res.ok) {
+                setEvents(res.events);
+                writeCache(res.events);
                 lastOk = Date.now();
                 attempt = 0;
                 setSync('ok');
@@ -156,8 +142,6 @@ const CalendarPage = () => {
         const onVisible = () => {
             if (document.hidden || !lastOk || Date.now() - lastOk < RESYNC_AFTER) return;
             lastOk = 0;
-            gotFirestore = false;
-            gotGoogle = false;
             run();
         };
 
@@ -171,17 +155,16 @@ const CalendarPage = () => {
         };
     }, [reloadKey]);
 
-    const events = useMemo(() => {
-        const firestoreGoogleIds = new Set(firestoreEvents.map((e) => e.googleCalendarEventId).filter(Boolean));
-        const googleEvents = googleRaw
-            .map(convertGoogleEventToAppEvent)
-            .filter((ge) => !firestoreGoogleIds.has(ge.googleEventId));
-        return [...firestoreEvents, ...googleEvents, ...localEvents];
-    }, [firestoreEvents, googleRaw, localEvents]);
-    const setEvents = (updater) => setLocalEvents((prev) => updater(prev));
+    const addLocalEvent = (ev) => setEvents((prev) => [...prev, ev]);
+
+    // Ο επισκέπτης βλέπει μόνο "Κλεισμένο" / "Σε αναμονή", ποτέ ονόματα
+    const displayEvents = useMemo(
+        () => events.map((e) => ({ ...e, title: e.bookedBy === 'pending_request' ? t.eventLabels.pending : t.eventLabels.busy })),
+        [events, t]
+    );
 
     const hasOverlap = (start, end) => events.some((event) => {
-        if (!event.start || !event.end) return false;
+        if (!event.start || !event.end || event.bookedBy === 'pending_request') return false;
         return start < event.end && end > event.start;
     });
 
@@ -263,71 +246,29 @@ const CalendarPage = () => {
             return;
         }
         try {
-            const isAuthorized = await isEmailAuthorized(bookingData.studentEmail);
+            const result = await createBookingRequest(bookingData);
+            if (!result.success) throw new Error('Failed to create booking request');
 
-            if (isAuthorized) {
-                // Γράψε στο booking_requests με status approved
-                const result = await createBookingRequest({
-                    ...bookingData,
-                    bookedBy: 'verified_user',
-                    status: 'approved'
-                });
-
-                if (!result.success) throw new Error('Failed to create booking');
-
-                // Δημιούργησε event στο Google Calendar μέσω Apps Script
-                const googleResult = await createGoogleCalendarEvent({
+            // Ειδοποίηση με email (προσωρινά, μέχρι να έρθουν οι ειδοποιήσεις από το admin)
+            emailjs.send(
+                import.meta.env.VITE_EMAILJS_SERVICE_ID,
+                import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+                {
                     title: bookingData.title,
-                    startTime: bookingData.startTime,
-                    endTime: bookingData.endTime,
-                    notes: bookingData.notes
-                });
+                    student_email: bookingData.studentEmail,
+                    date: bookingData.startTime.toLocaleDateString(t.booking.dateLocale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+                    time: `${bookingData.startTime.toLocaleTimeString(t.booking.dateLocale, { hour: '2-digit', minute: '2-digit' })} - ${bookingData.endTime.toLocaleTimeString(t.booking.dateLocale, { hour: '2-digit', minute: '2-digit' })}`,
+                    notes: bookingData.notes || t.emailNotesFallback
+                },
+                import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+            );
 
-                // Πρόσθεσε στο UI άμεσα
-                const newEvent = {
-                    id: `approved-${result.id}`,
-                    title: bookingData.title,
-                    start: bookingData.startTime,
-                    end: bookingData.endTime,
-                    bookedBy: 'verified_user',
-                    studentEmail: bookingData.studentEmail,
-                    notes: bookingData.notes,
-                    status: 'approved'
-                };
-                setEvents(prev => [...prev, newEvent]);
-            } else {
-                // Non-verified user - only booking request (no Google Calendar)
-                const result = await createBookingRequest(bookingData);
-                if (!result.success) throw new Error('Failed to create booking request');
-
-                // Στείλε email ειδοποίηση
-                emailjs.send(
-                    import.meta.env.VITE_EMAILJS_SERVICE_ID,
-                    import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-                    {
-                        title: bookingData.title,
-                        student_email: bookingData.studentEmail,
-                        date: bookingData.startTime.toLocaleDateString(t.booking.dateLocale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
-                        time: `${bookingData.startTime.toLocaleTimeString(t.booking.dateLocale, { hour: '2-digit', minute: '2-digit' })} - ${bookingData.endTime.toLocaleTimeString(t.booking.dateLocale, { hour: '2-digit', minute: '2-digit' })}`,
-                        notes: bookingData.notes || t.emailNotesFallback
-                    },
-                    import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-                );
-
-
-                const pendingEvent = {
-                    id: `pending-${result.id}`,
-                    title: bookingData.title,
-                    start: bookingData.startTime,
-                    end: bookingData.endTime,
-                    bookedBy: 'pending_request',
-                    studentEmail: bookingData.studentEmail,
-                    notes: bookingData.notes,
-                    status: 'pending'
-                };
-
-                setEvents(prev => [...prev, pendingEvent]);
-            }
+            addLocalEvent({
+                id: `pending-${Date.now()}`,
+                start: bookingData.startTime,
+                end: bookingData.endTime,
+                bookedBy: 'pending_request'
+            });
         } catch (error) {
             console.error('Booking error:', error);
             alert(t.alerts.genericError);
@@ -372,7 +313,7 @@ const CalendarPage = () => {
                         <Calendar
                             localizer={localizer}
                             culture={language === 'en' ? 'en' : 'el'}
-                            events={events}
+                            events={displayEvents}
                             startAccessor="start"
                             endAccessor="end"
                             style={{ height: isMobile ? 'max(520px, calc(100svh - 210px))' : 750 }}

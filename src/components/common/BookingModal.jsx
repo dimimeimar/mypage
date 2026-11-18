@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { calendarData } from '../../data/calendar_data';
-import { isEmailAuthorized } from '../../services/calendarService';
 
 const BookingModal = ({
   isOpen,
@@ -111,7 +110,7 @@ const BookingModal = ({
     return Math.round((formData.endTime - formData.startTime) / (1000 * 60));
   };
 
-  // Email validation & live check αν είναι εγκεκριμένο (whitelist) με debounce
+  // Αλλαγή email (η άμεση κράτηση για whitelisted γίνεται με login, όχι με email)
   const handleEmailChange = (email) => {
     setFormData(prev => ({ ...prev, studentEmail: email }));
     setIsVerifiedUser(false);
@@ -120,14 +119,6 @@ const BookingModal = ({
       setErrors(prev => ({ ...prev, studentEmail: null }));
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (!emailRegex.test(email)) return;
-
-    debounceRef.current = setTimeout(async () => {
-      const authorized = await isEmailAuthorized(email);
-      setIsVerifiedUser(authorized);
-    }, 500);
   };
 
   // Form validation

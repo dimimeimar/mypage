@@ -52,6 +52,7 @@ export const calendarData = {
       blocked: 'Το πρόγραμμα φορτώνει ακόμα. Δοκιμάστε ξανά σε λίγα δευτερόλεπτα.'
     },
     bookButton: 'Νέα κράτηση',
+    eventLabels: { busy: 'Κλεισμένο', pending: 'Σε αναμονή' },
     emailNotesFallback: 'Καμία',
     booking: {
       dateLocale: 'el-GR',
@@ -138,6 +139,7 @@ export const calendarData = {
       blocked: 'The schedule is still loading. Please try again in a few seconds.'
     },
     bookButton: 'New booking',
+    eventLabels: { busy: 'Booked', pending: 'Pending' },
     emailNotesFallback: 'None',
     booking: {
       dateLocale: 'en-US',
