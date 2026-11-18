@@ -4,10 +4,12 @@
 -- Events from my Google Calendar (pulled every few minutes by the gcal-sync function).
 -- Only start/end are stored: no titles, so nothing private is exposed.
 create table if not exists public.external_busy (
-  google_event_id text primary key,
+  google_event_id text not null,
   starts_at       timestamptz not null,
   ends_at         timestamptz not null,
-  seen_at         timestamptz not null default now()
+  seen_at         timestamptz not null default now(),
+  -- recurring events share one Google id, so the start time is part of the key
+  primary key (google_event_id, starts_at)
 );
 create index if not exists external_busy_starts_idx on public.external_busy (starts_at);
 alter table public.external_busy enable row level security;

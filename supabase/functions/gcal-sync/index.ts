@@ -110,22 +110,27 @@ Deno.serve(async (req) => {
 
     const { data: own } = await db.from('lessons').select('gcal_event_id').not('gcal_event_id', 'is', null);
     const ownIds = new Set((own ?? []).map((r: any) => r.gcal_event_id));
-    const ext = (res.events as any[])
-      .filter((e) => !e.isAllDay && !ownIds.has(e.googleEventId))
-      .map((e) => ({ google_event_id: e.googleEventId, starts_at: e.start, ends_at: e.end, seen_at: new Date().toISOString() }));
+    const runStamp = new Date().toISOString();
+    // recurring events repeat the same id, so de-duplicate on id + start
+    const extMap = new Map<string, any>();
+    for (const e of res.events as any[]) {
+      if (e.isAllDay || ownIds.has(e.googleEventId)) continue;
+      extMap.set(`${e.googleEventId}|${e.start}`, {
+        google_event_id: e.googleEventId, starts_at: e.start, ends_at: e.end, seen_at: runStamp,
+      });
+    }
+    const ext = [...extMap.values()];
 
     for (let i = 0; i < ext.length; i += 500) {
-      const { error } = await db.from('external_busy').upsert(ext.slice(i, i + 500));
+      const { error } = await db.from('external_busy')
+        .upsert(ext.slice(i, i + 500), { onConflict: 'google_event_id,starts_at' });
       if (error) throw new Error(`upsert external_busy: ${error.message}`);
     }
-    // remove events that disappeared from Google inside the synced window
-    const keep = new Set(ext.map((e) => e.google_event_id));
-    const { data: existing } = await db.from('external_busy').select('google_event_id')
-      .gte('starts_at', from.toISOString()).lte('starts_at', to.toISOString());
-    const stale = (existing ?? []).map((r: any) => r.google_event_id).filter((id: string) => !keep.has(id));
-    for (let i = 0; i < stale.length; i += 200) {
-      await db.from('external_busy').delete().in('google_event_id', stale.slice(i, i + 200));
-    }
+    // anything in the window that was not refreshed this run has disappeared from Google
+    await db.from('external_busy').delete()
+      .lt('seen_at', runStamp).gte('starts_at', from.toISOString()).lte('starts_at', to.toISOString());
+    // old rows are no longer needed
+    await db.from('external_busy').delete().lt('ends_at', from.toISOString());
     stats.pulled = ext.length;
   } catch (e) {
     stats.errors.push(String(e));
