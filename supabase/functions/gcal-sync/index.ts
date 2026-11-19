@@ -51,10 +51,7 @@ const eventNotes = (l: any) =>
     .filter(Boolean).join('\n');
 const same = (a: string | null, b: string) => !!a && new Date(a).getTime() === new Date(b).getTime();
 
-Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
-  if (!(await authorized(req))) return reply({ error: 'unauthorized' }, 401);
-
+async function run(): Promise<Response> {
   const stats = { created: 0, updated: 0, deleted: 0, pulled: 0, errors: [] as string[] };
 
   try {
@@ -137,4 +134,18 @@ Deno.serve(async (req) => {
     return reply({ ok: false, ...stats }, 500);
   }
   return reply({ ok: stats.errors.length === 0, ...stats });
+}
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
+  if (!(await authorized(req))) return reply({ error: 'unauthorized' }, 401);
+
+  // ένα sync τη φορά: ο δεύτερος καλών παραλείπεται και το πιάνει το cron σε λίγα λεπτά
+  const { data: got } = await db.rpc('try_sync_lock', { seconds: 120 });
+  if (!got) return reply({ ok: true, skipped: 'another sync is running' });
+  try {
+    return await run();
+  } finally {
+    await db.rpc('release_sync_lock');
+  }
 });
