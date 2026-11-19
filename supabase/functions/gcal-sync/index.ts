@@ -108,10 +108,21 @@ async function run(): Promise<Response> {
     const { data: own } = await db.from('lessons').select('gcal_event_id').not('gcal_event_id', 'is', null);
     const ownIds = new Set((own ?? []).map((r: any) => r.gcal_event_id));
     const runStamp = new Date().toISOString();
+
+    // Αυτοθεραπεία: αν υπάρχει στο Google event με ίδιο τίτλο και ώρα με εγκεκριμένο μάθημα
+    // αλλά με άλλο id, είναι αντίγραφο (π.χ. από ταυτόχρονο sync) και το σβήνουμε.
+    const { data: appr } = await db.from('lessons').select('student_name, subject, starts_at, ends_at')
+      .eq('status', 'approved').not('gcal_event_id', 'is', null);
+    const lessonKeys = new Set((appr ?? []).map((l: any) =>
+      `${eventTitle(l).trim()}|${new Date(l.starts_at).getTime()}|${new Date(l.ends_at).getTime()}`));
+    const dupes: string[] = [];
+
     // recurring events repeat the same id, so de-duplicate on id + start
     const extMap = new Map<string, any>();
     for (const e of res.events as any[]) {
       if (e.isAllDay || ownIds.has(e.googleEventId)) continue;
+      const key = `${String(e.title ?? '').trim()}|${new Date(e.start).getTime()}|${new Date(e.end).getTime()}`;
+      if (lessonKeys.has(key)) { dupes.push(e.googleEventId); continue; }
       extMap.set(`${e.googleEventId}|${e.start}`, {
         google_event_id: e.googleEventId, starts_at: e.start, ends_at: e.end, title: e.title ?? null, seen_at: runStamp,
       });
@@ -129,6 +140,14 @@ async function run(): Promise<Response> {
     // old rows are no longer needed
     await db.from('external_busy').delete().lt('ends_at', from.toISOString());
     stats.pulled = ext.length;
+
+    for (const id of [...new Set(dupes)]) {
+      const r = await gas('deleteEvent', { googleEventId: id });
+      if (r.success || r.error === 'Event not found') {
+        await db.from('external_busy').delete().eq('google_event_id', id);
+        stats.deleted++;
+      } else stats.errors.push(`dedupe ${id}: ${r.error}`);
+    }
   } catch (e) {
     stats.errors.push(String(e));
     return reply({ ok: false, ...stats }, 500);
