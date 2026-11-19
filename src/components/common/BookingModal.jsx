@@ -110,6 +110,26 @@ const BookingModal = ({
     }
   };
 
+  // Ημερομηνία (YYYY-MM-DD, τοπική ώρα) για το <input type="date">
+  const toDateInput = (d) => {
+    if (!d) return '';
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+  const todayInput = toDateInput(new Date());
+
+  // Αλλαγή ημέρας: οι ώρες μένουν ίδιες, αλλάζει μόνο η ημερομηνία σε έναρξη και λήξη
+  const updateDateFromInput = (value) => {
+    if (!value) return;
+    const [y, m, d] = value.split('-').map(Number);
+    const apply = (date) => {
+      const n = new Date(date);
+      n.setFullYear(y, m - 1, d);
+      return n;
+    };
+    setFormData(prev => ({ ...prev, startTime: apply(prev.startTime), endTime: apply(prev.endTime) }));
+    if (errors.time) setErrors(prev => ({ ...prev, time: null }));
+  };
+
   // Calculate duration in minutes
   const getDuration = () => {
     if (!formData.startTime || !formData.endTime) return 0;
@@ -145,6 +165,8 @@ const BookingModal = ({
       newErrors.time = t.validation.timeRequired;
     } else if (formData.endTime <= formData.startTime) {
       newErrors.time = t.validation.timeOrder;
+    } else if (formData.startTime.getTime() <= Date.now()) {
+      newErrors.time = t.validation.pastTime;
     }
 
     const duration = getDuration();
@@ -300,6 +322,21 @@ const BookingModal = ({
               <div className="flex items-center mb-4">
                 <Clock className="h-5 w-5 mr-2" style={{ color: 'var(--color-teal)' }} />
                 <h3 className="font-semibold text-gray-900">{t.timeSectionTitle}</h3>
+              </div>
+
+              {/* Date */}
+              <div className="mb-4">
+                <label htmlFor="booking-date" className="block text-xs font-medium text-gray-600 mb-2">
+                  {t.dateLabel}
+                </label>
+                <input
+                  id="booking-date"
+                  type="date"
+                  min={todayInput}
+                  value={toDateInput(formData.startTime)}
+                  onChange={(e) => updateDateFromInput(e.target.value)}
+                  className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white font-semibold text-gray-900"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">

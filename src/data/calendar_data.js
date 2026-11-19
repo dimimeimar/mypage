@@ -65,6 +65,7 @@ export const calendarData = {
       emailLabel: 'Email *',
       emailHint: 'Το email χρησιμοποιείται για την επιβεβαίωση της κράτησης',
       timeSectionTitle: 'Ώρες Μαθήματος',
+      dateLabel: 'Ημερομηνία',
       startLabel: 'Έναρξη',
       endLabel: 'Λήξη',
       durationLabel: 'Διάρκεια:',
@@ -85,6 +86,7 @@ export const calendarData = {
         titleRequired: 'Ο τίτλος είναι υποχρεωτικός',
         timeRequired: 'Επιλέξτε ώρες έναρξης και λήξης',
         timeOrder: 'Η ώρα λήξης πρέπει να είναι μετά την έναρξη',
+        pastTime: 'Η ώρα έναρξης έχει ήδη περάσει. Διαλέξτε μελλοντική ημερομηνία ή ώρα',
         minDuration: 'Το μάθημα πρέπει να διαρκεί τουλάχιστον 30 λεπτά',
         maxDuration: 'Το μάθημα δεν μπορεί να διαρκεί περισσότερο από 4 ώρες',
         submitError: 'Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξανά.'
@@ -155,6 +157,7 @@ export const calendarData = {
       emailLabel: 'Email *',
       emailHint: 'Your email is used to confirm the booking',
       timeSectionTitle: 'Lesson Time',
+      dateLabel: 'Date',
       startLabel: 'Start',
       endLabel: 'End',
       durationLabel: 'Duration:',
@@ -175,6 +178,7 @@ export const calendarData = {
         titleRequired: 'Title is required',
         timeRequired: 'Select start and end times',
         timeOrder: 'End time must be after start time',
+        pastTime: 'The start time has already passed. Choose a future date or time',
         minDuration: 'The lesson must last at least 30 minutes',
         maxDuration: 'The lesson cannot last more than 4 hours',
         submitError: 'Something went wrong. Please try again.'
