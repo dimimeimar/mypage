@@ -55,11 +55,41 @@ function getEvents_(p) {
   };
 }
 
+function isGmail_(e) {
+  return !!e && /@(gmail|googlemail)\.com$/i.test(String(e).trim());
+}
+
+// Δημιουργεί το event. Αν ο μαθητής έχει Gmail, του στέλνει πρόσκληση.
+// Με ενεργό το "Google Calendar API" στις Services του project, προσθέτει και σύνδεσμο Google Meet.
 function createEvent_(p) {
-  const ev = cal_().createEvent(p.title || 'Μάθημα', new Date(p.startTime), new Date(p.endTime), { description: p.notes || '' });
+  const title = p.title || 'Μάθημα';
+  const start = new Date(p.startTime);
+  const end = new Date(p.endTime);
+  const guest = isGmail_(p.guestEmail) ? String(p.guestEmail).trim().toLowerCase() : null;
+
+  if (typeof Calendar !== 'undefined' && Calendar.Events) {
+    try {
+      const res = Calendar.Events.insert({
+        summary: title,
+        description: p.notes || '',
+        start: { dateTime: start.toISOString() },
+        end: { dateTime: end.toISOString() },
+        attendees: guest ? [{ email: guest }] : [],
+        reminders: { useDefault: false, overrides: [{ method: 'popup', minutes: 60 }, { method: 'popup', minutes: 15 }] },
+        conferenceData: { createRequest: { requestId: Utilities.getUuid(), conferenceSolutionKey: { type: 'hangoutsMeet' } } }
+      }, CALENDAR_ID, { conferenceDataVersion: 1, sendUpdates: guest ? 'all' : 'none' });
+      return { success: true, googleEventId: res.iCalUID, invited: !!guest, meet: true };
+    } catch (err) {
+      // πέφτουμε στην απλή δημιουργία παρακάτω
+    }
+  }
+
+  const opts = { description: p.notes || '' };
+  if (guest) { opts.guests = guest; opts.sendInvites = true; }
+  const ev = cal_().createEvent(title, start, end, opts);
   ev.addPopupReminder(60);
   ev.addPopupReminder(15);
-  return { success: true, googleEventId: ev.getId() };
+  return { success: true, googleEventId: ev.getId(), invited: !!guest, meet: false };
 }
 
 function updateEvent_(p) {

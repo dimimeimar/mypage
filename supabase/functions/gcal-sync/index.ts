@@ -49,6 +49,7 @@ const eventTitle = (l: any) => (l.subject ? `${l.student_name} ${l.subject}` : l
 const eventNotes = (l: any) =>
   [l.student_email && `Email: ${l.student_email}`, l.student_phone && `Tel: ${l.student_phone}`, l.notes]
     .filter(Boolean).join('\n');
+const gmailOnly = (e: string | null) => (e && /@(gmail|googlemail)\.com$/i.test(e.trim()) ? e.trim().toLowerCase() : null);
 const same = (a: string | null, b: string) => !!a && new Date(a).getTime() === new Date(b).getTime();
 
 async function run(): Promise<Response> {
@@ -61,6 +62,7 @@ async function run(): Promise<Response> {
     for (const l of toCreate ?? []) {
       const r = await gas('createEvent', {
         title: eventTitle(l), startTime: l.starts_at, endTime: l.ends_at, notes: eventNotes(l),
+        guestEmail: gmailOnly(l.student_email),
       });
       if (r.success) {
         await db.from('lessons').update({

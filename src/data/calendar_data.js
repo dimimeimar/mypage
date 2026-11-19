@@ -54,7 +54,7 @@ export const calendarData = {
     },
     bookButton: 'Νέα κράτηση',
     eventLabels: { busy: 'Κλεισμένο', pending: 'Σε αναμονή' },
-    directBanner: 'Έχετε δικαίωμα άμεσης κράτησης: οι ώρες που κλείνετε (τουλάχιστον 48 ώρες νωρίτερα) πιάνονται αμέσως.',
+    directBanner: 'Έχετε δικαίωμα άμεσης κράτησης: οι ώρες που κλείνετε (τουλάχιστον 48 ώρες νωρίτερα) επιβεβαιώνονται αυτόματα. Αν το email σας είναι Gmail, θα λάβετε πρόσκληση στο Google Calendar.',
     emailNotesFallback: 'Καμία',
     booking: {
       dateLocale: 'el-GR',
@@ -77,6 +77,7 @@ export const calendarData = {
       submitButton: 'Κλείσιμο Μαθήματος',
       submitPendingButton: 'Αποστολή Αίτησης',
       submittingButton: 'Υποβολή...',
+      directTooSoon: 'Άμεση κράτηση γίνεται όταν η ώρα απέχει τουλάχιστον 48 ώρες. Για πιο κοντινή ώρα θα σταλεί αίτημα και θα το εγκρίνω εγώ.',
       infoNote: 'Η αίτησή σας θα εξεταστεί και θα λάβετε επιβεβαίωση σύντομα',
       validation: {
         emailRequired: 'Το email είναι υποχρεωτικό',
@@ -143,7 +144,7 @@ export const calendarData = {
     },
     bookButton: 'New booking',
     eventLabels: { busy: 'Booked', pending: 'Pending' },
-    directBanner: 'You have direct booking access: lessons you book (at least 48 hours ahead) are reserved immediately.',
+    directBanner: 'You have direct booking access: lessons you book (at least 48 hours ahead) are confirmed automatically. If your email is Gmail, you will receive a Google Calendar invitation.',
     emailNotesFallback: 'None',
     booking: {
       dateLocale: 'en-US',
@@ -166,6 +167,7 @@ export const calendarData = {
       submitButton: 'Book Lesson',
       submitPendingButton: 'Send Request',
       submittingButton: 'Submitting...',
+      directTooSoon: 'Instant booking works when the lesson is at least 48 hours away. For a closer time a request will be sent and I will approve it.',
       infoNote: "Your request will be reviewed and you'll receive a confirmation shortly",
       validation: {
         emailRequired: 'Email is required',

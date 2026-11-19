@@ -174,7 +174,7 @@ const BookingModal = ({
         endTime: formData.endTime,
         notes: formData.notes,
         isVerified: isVerifiedUser,
-        status: isVerifiedUser ? 'booked' : 'pending',
+        status: isVerifiedUser ? 'approved' : 'pending',
         bookedBy: isVerifiedUser ? 'verified_user' : 'pending_request'
       };
 
@@ -405,6 +405,12 @@ const BookingModal = ({
                 )}
               </button>
             </div>
+
+            {directBooking && !isVerifiedUser && !!formData.startTime && (
+              <p className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                {t.directTooSoon}
+              </p>
+            )}
 
             {/* Info Note */}
             {!isVerifiedUser && (
