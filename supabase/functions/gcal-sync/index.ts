@@ -102,7 +102,7 @@ async function run(): Promise<Response> {
     }
 
     // ── PULL: my Google events -> external_busy ──
-    const from = new Date(Date.now() - 24 * 3600e3);
+    const from = new Date(Date.now() - 15 * 24 * 3600e3); // 15 μέρες πίσω, για να φαίνεται το πρόσφατο παρελθόν
     const to = new Date(Date.now() + 270 * 24 * 3600e3);
     const res = await gas('getEvents', { timeMin: from.toISOString(), timeMax: to.toISOString() });
     if (!res.success) throw new Error(`getEvents: ${res.error}`);

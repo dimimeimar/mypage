@@ -4,9 +4,9 @@ import HeroArt from '../fx/HeroArt';
 
 /* Κοινό hero για όλες τις εσωτερικές σελίδες.
    seo: key του seo_data.js (προαιρετικό) - βάζει και τα meta tags της σελίδας.
-   image: προαιρετική φωτογραφία φόντου. art: γραμμικό σχέδιο φόντου (plot, steps, path, circuit, network). compact: χαμηλότερο (π.χ. Ημερολόγιο). */
-const PageHero = ({ eyebrow, title, subtitle, image, art, compact = false, seo }) => (
-  <section className={`page-hero${compact ? ' page-hero--compact' : ''}`}>
+   image: προαιρετική φωτογραφία φόντου. art: γραμμικό σχέδιο φόντου (plot, steps, path, circuit, network). compact: χαμηλότερο. slim: ελάχιστο ύψος (Ημερολόγιο: να φαίνεται πρώτο το περιεχόμενο). */
+const PageHero = ({ eyebrow, title, subtitle, image, art, compact = false, slim = false, seo }) => (
+  <section className={`page-hero${compact ? ' page-hero--compact' : ''}${slim ? ' page-hero--slim' : ''}`}>
     {seo && <SEO page={seo} />}
     {image && <img className="page-hero__img" src={image} alt="" />}
     {art && <HeroArt variant={art} />}

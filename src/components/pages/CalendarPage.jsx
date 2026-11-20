@@ -278,6 +278,9 @@ const CalendarPage = () => {
                 import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
                 {
                     title: bookingData.title,
+                    email_subject: `${direct ? 'Νέα Άμεση Κράτηση' : 'Νέο Αίτημα Κράτησης'}: ${bookingData.title}`,
+                    intro: direct ? 'Νέα άμεση κράτηση μαθήματος (επιβεβαιώθηκε αυτόματα)!' : 'Νέο αίτημα κράτησης μαθήματος!',
+                    kind: direct ? 'direct' : 'request',
                     student_email: bookingData.studentEmail,
                     date: bookingData.startTime.toLocaleDateString(t.booking.dateLocale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
                     time: `${bookingData.startTime.toLocaleTimeString(t.booking.dateLocale, { hour: '2-digit', minute: '2-digit' })} - ${bookingData.endTime.toLocaleTimeString(t.booking.dateLocale, { hour: '2-digit', minute: '2-digit' })}`,
@@ -302,7 +305,7 @@ const CalendarPage = () => {
         <div className="min-h-screen">
 
             {/* ── HERO ── */}
-            <PageHero seo="calendar" compact title={t.hero.title} subtitle={t.hero.subtitle} />
+            <PageHero seo="calendar" slim title={t.hero.title} subtitle={t.hero.subtitle} />
 
             {/* Calendar Section */}
             <section className="cal-section">
@@ -341,7 +344,7 @@ const CalendarPage = () => {
                             events={displayEvents}
                             startAccessor="start"
                             endAccessor="end"
-                            style={{ height: isMobile ? 'max(520px, calc(100svh - 210px))' : 750 }}
+                            style={{ height: isMobile ? 'max(520px, calc(100svh - 210px))' : 'clamp(540px, calc(100svh - 250px), 820px)' }}
                             view={currentView}
                             onView={setCurrentView}
                             views={['month', 'week', 'day']}

@@ -46,6 +46,9 @@ const ContactPage = () => {
         EMAILJS_TEMPLATE_ID,
         {
           title: `${d.form.emailSubjectPrefix} ${form.name}${form.subject ? ' – ' + form.subject : ''}`,
+          email_subject: `Νέο Μήνυμα Επικοινωνίας: ${form.name}${form.subject ? ' – ' + form.subject : ''}`,
+          intro: 'Νέο μήνυμα επικοινωνίας από τη φόρμα του site!',
+          kind: 'contact',
           student_email: form.email,
           date: new Date().toLocaleDateString(dateLocale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
           time: new Date().toLocaleTimeString(dateLocale, { hour: '2-digit', minute: '2-digit' }),
