@@ -112,12 +112,18 @@ async function collect() {
 
 // ── Gemini embeddings (έως 100 κείμενα ανά αίτημα) ──
 async function embed(texts) {
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${EMBED_MODEL}:batchEmbedContents`, {
+  let res;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${EMBED_MODEL}:batchEmbedContents`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY },
     body: JSON.stringify({ requests: texts.map((t) => ({
       model: `models/${EMBED_MODEL}`, content: { parts: [{ text: t }] }, taskType: 'RETRIEVAL_DOCUMENT', outputDimensionality: DIMS })) }),
   });
+    if (res.status !== 429) break;
+    console.log('  όριο Gemini (free tier), αναμονή 35s…');
+    await new Promise((r) => setTimeout(r, 35000));
+  }
   if (!res.ok) throw new Error(`Gemini ${res.status}: ${await res.text()}`);
   return (await res.json()).embeddings.map((e) => e.values);
 }
