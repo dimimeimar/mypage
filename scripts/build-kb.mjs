@@ -129,7 +129,8 @@ async function sb(pathAndQuery, init = {}) {
       'Content-Type': 'application/json', ...(init.headers || {}) },
   });
   if (!res.ok) throw new Error(`Supabase ${res.status}: ${await res.text()}`);
-  return res.status === 204 ? null : res.json();
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 }
 
 function loadEnvFile() {
