@@ -45,7 +45,7 @@ async function gemini(system: string, history: Turn[], user: string): Promise<st
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: system }] },
       contents,
-      generationConfig: { temperature: 0.3, maxOutputTokens: 350 },
+      generationConfig: { temperature: 0.15, maxOutputTokens: 350 },
     }),
   });
   if (!r.ok) throw await bad(r, 'gemini');
@@ -66,7 +66,7 @@ async function anthropic(system: string, history: Turn[], user: string): Promise
     body: JSON.stringify({
       model: MODEL,
       max_tokens: 350,
-      temperature: 0.3,
+      temperature: 0.15,
       system,
       messages: [...history.map((t) => ({ role: t.role, content: t.text })), { role: 'user', content: user }],
     }),

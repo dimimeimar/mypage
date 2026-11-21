@@ -66,7 +66,7 @@ create table if not exists public.assistant_log (
   created_at timestamptz not null default now(),
   lang       text,
   question   text,
-  status     text,          -- ok | no_context | user_limit | global_limit | error
+  status     text,          -- ok | declined | no_context | user_limit | global_limit | error
   top_sim    real,          -- μεγαλύτερη ομοιότητα που βρέθηκε (για ρύθμιση του κατωφλιού)
   sources    text[]
 );

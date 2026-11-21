@@ -17,7 +17,7 @@ const ORIGINS = (Deno.env.get('ALLOWED_ORIGINS') || 'https://meimaridistutor.com
   .split(',').map((s) => s.trim());
 
 type Lang = 'el' | 'en';
-type Status = 'ok' | 'no_context' | 'user_limit' | 'global_limit' | 'error';
+type Status = 'ok' | 'declined' | 'no_context' | 'user_limit' | 'global_limit' | 'error';
 
 const T: Record<Lang, Record<string, string>> = {
   el: {
@@ -43,7 +43,8 @@ RULES:
 - Always refer to Dimitri in the third person ("Dimitri teaches..."), never as "I", even if the CONTEXT is written in first person.
 - Speak as "I" about yourself ("I can't see the calendar"), never say "the Digital Assistant" in the third person.
 - Suggest the Contact page only when the user needs to contact Dimitri or the information is missing, not at the end of every answer.
-- Reply in the same language as the user's question (Greek or English), in 2 to 4 short sentences, plain text, no markdown, no lists, no em dashes.
+- If you decline or the CONTEXT lacks the answer, start your reply with the exact token #NA# followed by your reply.
+- Reply in the same language as the user's question (Greek or English), using only Greek or Latin letters, in 2 to 4 short sentences, plain text, no markdown, no lists, no em dashes.
 - You are an AI. If asked, say so. Do not ask for or store personal data.`;
 
 const sha = async (s: string) =>
@@ -110,17 +111,20 @@ Deno.serve(async (req) => {
 
     const used = hits.filter((h) => h.similarity >= MIN_SIMILARITY * 0.9);
     const context = used.map((h, i) => `[${i + 1}] ${h.content}`).join('\n\n');
-    const answer = await generate(
+    const raw = await generate(
       `${SYSTEM}\n\nCONTEXT:\n${context}`,
       history,
       question,
     );
+    const declined = raw.includes('#NA#');
+    const answer = raw.replace(/#NA#/g, '').trim();
 
     const seen = new Set<string>();
-    const sources = used.filter((h) => h.url && !seen.has(h.url) && seen.add(h.url)).slice(0, 3)
+    const sources = declined ? [] : used.filter((h) => h.url && !seen.has(h.url) && seen.add(h.url)).slice(0, 3)
       .map((h) => ({ title: h.title, url: h.url }));
-    await log('ok', top, sources.map((s) => s.url));
-    return send({ answer, sources, status: 'ok' satisfies Status, ...(DEBUG ? { detail: `top_sim=${top.toFixed(3)}` } : {}) });
+    const status: Status = declined ? 'declined' : 'ok';
+    await log(status, top, sources.map((s) => s.url));
+    return send({ answer, sources, status, ...(DEBUG ? { detail: `top_sim=${top.toFixed(3)}` } : {}) });
   } catch (e) {
     const detail = e instanceof Error ? e.message : JSON.stringify(e);
     console.error('ask failed', detail);
