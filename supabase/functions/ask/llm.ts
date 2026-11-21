@@ -1,6 +1,6 @@
 // Provider adapter: Gemini by default, Anthropic optional (LLM_PROVIDER=anthropic + ANTHROPIC_API_KEY).
 const PROVIDER = (Deno.env.get('LLM_PROVIDER') || 'gemini').toLowerCase();
-const MODEL = Deno.env.get('LLM_MODEL') || (PROVIDER === 'anthropic' ? 'claude-haiku-4-5' : 'gemini-2.5-flash-lite');
+const MODEL = Deno.env.get('LLM_MODEL') || (PROVIDER === 'anthropic' ? 'claude-haiku-4-5' : 'gemini-3.5-flash-lite');
 const EMBED_MODEL = Deno.env.get('EMBED_MODEL') || 'gemini-embedding-001';
 const GEMINI_KEY = Deno.env.get('GEMINI_API_KEY') || '';
 const DIMS = 768;
