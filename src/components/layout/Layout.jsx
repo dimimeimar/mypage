@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Navigation from '../common/Navigation.jsx';
 import Footer from '../common/Footer.jsx';
 import ThemeSwitcher from '../common/ThemeSwitcher.jsx';
+import AssistantLauncher from '../common/AssistantLauncher.jsx';
 import Backdrop from '../fx/Backdrop.jsx';
 import MatrixBoot from '../fx/MatrixBoot.jsx';
 
@@ -23,6 +24,7 @@ const Layout = ({ children }) => {
       </main>
       <Footer />
       <ThemeSwitcher />
+      <AssistantLauncher />
       <MatrixBoot />
     </div>
   );

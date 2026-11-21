@@ -33,3 +33,7 @@ supabase/data/
 supabase/.temp/
 history.json
 cal-history/
+
+# Ψηφιακή Γραμματεία
+.env.kb
+scripts/.kb-preview.json
