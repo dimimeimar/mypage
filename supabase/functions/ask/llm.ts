@@ -6,7 +6,8 @@ const GEMINI_KEY = Deno.env.get('GEMINI_API_KEY') || '';
 const DIMS = 768;
 
 export type Turn = { role: 'user' | 'assistant'; text: string };
-export class LlmError extends Error { constructor(public code: 'rate' | 'fail') { super(code); } }
+export class LlmError extends Error { constructor(public code: 'rate' | 'fail', detail = '') { super(`${code} ${detail}`.trim()); } }
+const bad = async (r: Response, what: string) => new LlmError(r.status === 429 ? 'rate' : 'fail', `${what} ${r.status} ${(await r.text()).slice(0, 300)}`);
 
 export async function embedQuery(text: string): Promise<number[]> {
   const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${EMBED_MODEL}:embedContent`, {
@@ -19,8 +20,7 @@ export async function embedQuery(text: string): Promise<number[]> {
       outputDimensionality: DIMS,
     }),
   });
-  if (r.status === 429) throw new LlmError('rate');
-  if (!r.ok) throw new LlmError('fail');
+  if (!r.ok) throw await bad(r, 'embed');
   const j = await r.json();
   const v: number[] | undefined = j?.embedding?.values;
   if (!v?.length) throw new LlmError('fail');
@@ -48,8 +48,7 @@ async function gemini(system: string, history: Turn[], user: string): Promise<st
       generationConfig: { temperature: 0.3, maxOutputTokens: 350 },
     }),
   });
-  if (r.status === 429) throw new LlmError('rate');
-  if (!r.ok) throw new LlmError('fail');
+  if (!r.ok) throw await bad(r, 'gemini');
   const j = await r.json();
   const out = j?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text || '').join('').trim();
   if (!out) throw new LlmError('fail');
@@ -72,8 +71,7 @@ async function anthropic(system: string, history: Turn[], user: string): Promise
       messages: [...history.map((t) => ({ role: t.role, content: t.text })), { role: 'user', content: user }],
     }),
   });
-  if (r.status === 429) throw new LlmError('rate');
-  if (!r.ok) throw new LlmError('fail');
+  if (!r.ok) throw await bad(r, 'anthropic');
   const j = await r.json();
   const out = j?.content?.map((c: { text?: string }) => c.text || '').join('').trim();
   if (!out) throw new LlmError('fail');

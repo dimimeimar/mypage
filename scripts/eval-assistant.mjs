@@ -28,7 +28,8 @@ let n = 0;
 for (const [q, want] of cases) {
   const r = await fetch(`${base}/functions/v1/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: q }) });
   const j = await r.json().catch(() => ({}));
-  console.log(`\n#${++n} [${want}] ${q}\n  -> ${j.status || r.status}: ${j.answer || JSON.stringify(j)}\n  sources: ${(j.sources || []).map((s) => s.url).join(', ') || '-'}`);
+  console.log(`\n#${++n} [${want}] ${q}\n  -> ${j.status || r.status}: ${j.answer || JSON.stringify(j)}\n  sources: ${(j.sources || []).map((s) => s.url).join(', ') || '-'}${j.detail ? `\n  DETAIL: ${j.detail}` : ''}`);
+  if (j.status === 'error' && n >= 2) { console.log('\nΔύο σφάλματα στη σειρά, σταματάω.'); break; }
   await new Promise((res) => setTimeout(res, 800));
 }
 console.log('\nΔες στο Supabase: select question, status, top_sim from assistant_log order by id desc;');

@@ -11,6 +11,7 @@ const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SE
 const MIN_SIMILARITY = Number(Deno.env.get('MIN_SIMILARITY') || '0.5');
 const USER_LIMIT = Number(Deno.env.get('ASSISTANT_USER_LIMIT') || '30');
 const GLOBAL_LIMIT = Number(Deno.env.get('ASSISTANT_GLOBAL_LIMIT') || '500');
+const DEBUG = Deno.env.get('ASSISTANT_DEBUG') === '1';
 const SALT = Deno.env.get('ASSISTANT_SALT') || 'change-me';
 const ORIGINS = (Deno.env.get('ALLOWED_ORIGINS') || 'https://meimaridistutor.com,https://www.meimaridistutor.com,http://localhost:5173,http://localhost:4173')
   .split(',').map((s) => s.trim());
@@ -79,9 +80,10 @@ Deno.serve(async (req) => {
   const log = (status: Status, top: number | null, sources: string[]) =>
     db.from('assistant_log').insert({ lang, question, status, top_sim: top, sources }).then(() => {}, () => {});
 
-  const fail = async (status: Status, top: number | null = null, sources: string[] = []) => {
+  const fail = async (status: Status, top: number | null = null, sources: string[] = [], detail = '') => {
     await log(status, top, sources);
-    return send({ answer: T[lang][status], sources: [], status });
+    // ASSISTANT_DEBUG=1 (secret): επιστρέφει την αιτία του σφάλματος, μόνο για διάγνωση
+    return send({ answer: T[lang][status], sources: [], status, ...(DEBUG && detail ? { detail } : {}) });
   };
 
   try {
@@ -117,7 +119,8 @@ Deno.serve(async (req) => {
     await log('ok', top, sources.map((s) => s.url));
     return send({ answer, sources, status: 'ok' satisfies Status });
   } catch (e) {
-    console.error('ask failed', e instanceof Error ? e.message : e);
-    return await fail('error');
+    const detail = e instanceof Error ? e.message : JSON.stringify(e);
+    console.error('ask failed', detail);
+    return await fail('error', null, [], detail);
   }
 });
